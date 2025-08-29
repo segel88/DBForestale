@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheda di Rilievo Forestale</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8FBC8F">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+</head>
+<body>
+    <div class="container">
+        <header class="form-header">
+            <h1>SCHEDA DI RILIEVO</h1>
+            <div class="db-key">Chiave db: <input type="text" id="chiave-db" placeholder=""></div>
+        </header>
+
+        <form id="forestry-form">
+            <!-- Sezione identificazione particella -->
+            <section class="form-section">
+                <div class="row">
+                    <div class="field-group">
+                        <label for="particella">Particella (PF) n.</label>
+                        <input type="text" id="particella" name="particella" maxlength="3">
+                    </div>
+                    <div class="field-group">
+                        <label for="sottoparticella">Sottoparticella (SPF) n.</label>
+                        <input type="text" id="sottoparticella" name="sottoparticella" maxlength="2">
+                    </div>
+                    <div class="field-group">
+                        <label for="localita">Località</label>
+                        <input type="text" id="localita" name="localita">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field-group">
+                        <label for="superficie-particella">Superficie particella (ha)</label>
+                        <input type="number" step="0.0001" max="999.9999" id="superficie-particella" name="superficie-particella">
+                    </div>
+                    <div class="field-group">
+                        <label for="superficie-sottoparticella">Superficie sottoparticella (ha)</label>
+                        <input type="number" step="0.0001" max="999.9999" id="superficie-sottoparticella" name="superficie-sottoparticella">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Caratteristiche stazionali e infrastrutture -->
+            <section class="form-section">
+                <div class="section-header">Caratteristiche stazionali</div>
+                <div class="section-header">Infrastrutture forestali</div>
+                <div class="dual-column">
+                    <div class="left-column">
+                        <div class="field-group">
+                            <label for="esposizione">Esposizione</label>
+                            <select id="esposizione" name="esposizione">
+                                <option value="">Seleziona...</option>
+                                <option value="N">N</option>
+                                <option value="NE">NE</option>
+                                <option value="E">E</option>
+                                <option value="SE">SE</option>
+                                <option value="S">S</option>
+                                <option value="SW">SW</option>
+                                <option value="W">W</option>
+                                <option value="NW">NW</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="altitudine">Altitudine (m)</label>
+                            <input type="number" id="altitudine" name="altitudine" max="9999" step="1">
+                        </div>
+                        <div class="field-group">
+                            <label for="pendenza">Pendenza (%)</label>
+                            <div class="input-with-unit">
+                                <input type="number" step="1" max="99" id="pendenza" name="pendenza">
+                                <span class="unit">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-column">
+                        <div class="field-group">
+                            <label for="viabilita">Viabilità e imposti</label>
+                            <textarea id="viabilita" name="viabilita" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Caratterizzazione della particella -->
+            <section class="form-section">
+                <div class="section-header">Caratterizzazione della particella</div>
+                <div class="dual-column">
+                    <div class="left-column">
+                        <div class="field-group">
+                            <label for="forma-governo">Forma di governo</label>
+                            <select id="forma-governo" name="forma-governo">
+                                <option value="">Seleziona...</option>
+                                <option value="Ceduo">Ceduo</option>
+                                <option value="Fustaia">Fustaia</option>
+                                <option value="Neoformazione">Neoformazione</option>
+                                <option value="Non definita">Non definita</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="composizione">Composizione</label>
+                            <select id="composizione" name="composizione">
+                                <option value="">Seleziona...</option>
+                                <option value="Puro">Puro</option>
+                                <option value="A prevalenza">A prevalenza</option>
+                                <option value="Misto">Misto</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="compresa-forestale">Compresa forestale</label>
+                            <input type="text" id="compresa-forestale" name="compresa-forestale">
+                        </div>
+                    </div>
+                    <div class="right-column">
+                        <div class="field-group">
+                            <label for="grado-evolutivo">Grado evolutivo</label>
+                            <select id="grado-evolutivo" name="grado-evolutivo">
+                                <option value="">Seleziona...</option>
+                                <option value="Ceduo a regime">Ceduo a regime</option>
+                                <option value="Ceduo invecchiato">Ceduo invecchiato</option>
+                                <option value="Fustaia giovane">Fustaia giovane</option>
+                                <option value="Fustaia adulta">Fustaia adulta</option>
+                                <option value="Fustaia matura">Fustaia matura</option>
+                                <option value="Novelletto">Novelletto</option>
+                                <option value="Perticaia">Perticaia</option>
+                                <option value="Posticcia">Posticcia</option>
+                                <option value="Spessina">Spessina</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="tipo-colturale">Tipo colturale</label>
+                            <select id="tipo-colturale" name="tipo-colturale">
+                                <option value="">Seleziona...</option>
+                                <option value="Ceduo semplice">Ceduo semplice</option>
+                                <option value="Ceduo intensamente matricinato">Ceduo intensamente matricinato</option>
+                                <option value="Ceduo composto">Ceduo composto</option>
+                                <option value="Ceduo a sterzo">Ceduo a sterzo</option>
+                                <option value="Ceduo coniferato">Ceduo coniferato</option>
+                                <option value="Fustaia coetanea">Fustaia coetanea</option>
+                                <option value="Fustaia transitoria">Fustaia transitoria</option>
+                                <option value="Fustaia irregolare">Fustaia irregolare</option>
+                                <option value="Fustaia disetanea">Fustaia disetanea</option>
+                                <option value="Fustaia su ceduo">Fustaia su ceduo</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="destinazione">Destinazione</label>
+                            <select id="destinazione" name="destinazione">
+                                <option value="">Seleziona...</option>
+                                <option value="Produttiva">Produttiva</option>
+                                <option value="Paesaggistica">Paesaggistica</option>
+                                <option value="Naturalistica">Naturalistica</option>
+                                <option value="Scientifica">Scientifica</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field-group full-width">
+                    <label for="tipo-forestale">Tipo forestale</label>
+                    <select id="tipo-forestale" name="tipo-forestale">
+                        <option value="">Seleziona...</option>
+                        <option value="1.1. Lecceta tipica a Viburnum tinus">1.1. Lecceta tipica a Viburnum tinus</option>
+                        <option value="1.2. Lecceta di transizione a boschi di caducifoglie">1.2. Lecceta di transizione a boschi di caducifoglie</option>
+                        <option value="1.3. Orno-lecceta con roverella delle zone interne">1.3. Orno-lecceta con roverella delle zone interne</option>
+                        <option value="1.4. Lecceta rupicola relitta submontana e montana">1.4. Lecceta rupicola relitta submontana e montana</option>
+                        <option value="2.1. Macchia media mesoditerranea">2.1. Macchia media mesoditerranea</option>
+                        <option value="2.2. Macchia bassa mesomediterranea">2.2. Macchia bassa mesomediterranea</option>
+                        <option value="2.3. Macchia termomediterranea">2.3. Macchia termomediterranea</option>
+                        <option value="2.4. Macchia rupestre a Olea europaea sylvestris ed Euphorbia dendroides">2.4. Macchia rupestre a Olea europaea sylvestris ed Euphorbia dendroides</option>
+                        <option value="2.5. Ginepreto dunale a Juniperus macrocarpa e J. phoenicea">2.5. Ginepreto dunale a Juniperus macrocarpa e J. phoenicea</option>
+                        <option value="2.6. Ginepreto rupestre a Juniperus phoenicea">2.6. Ginepreto rupestre a Juniperus phoenicea</option>
+                        <option value="2.7. Boscaglia di consolidamento dunale a tamerici">2.7. Boscaglia di consolidamento dunale a tamerici</option>
+                        <option value="3.1. Sughereta mista sopra ceduo di leccio e altre sempreverdi">3.1. Sughereta mista sopra ceduo di leccio e altre sempreverdi</option>
+                        <option value="3.2. Sughereta mista sopra ceduo di sempreverdi e caducifoglie">3.2. Sughereta mista sopra ceduo di sempreverdi e caducifoglie</option>
+                        <option value="3.3. Sughereta specializzata">3.3. Sughereta specializzata</option>
+                        <option value="4.1. Pineta costiera di pino d'Aleppo">4.1. Pineta costiera di pino d'Aleppo</option>
+                        <option value="4.2. Pineta di pino d'Aleppo di rimboschimento">4.2. Pineta di pino d'Aleppo di rimboschimento</option>
+                        <option value="5.1. Pineta dunale mesomediterranea di pino domestico">5.1. Pineta dunale mesomediterranea di pino domestico</option>
+                        <option value="5.2. Pineta dunale termomediterranea di pino domestico">5.2. Pineta dunale termomediterranea di pino domestico</option>
+                        <option value="5.3. Pineta dunale di pino domestico a leccio">5.3. Pineta dunale di pino domestico a leccio</option>
+                        <option value="5.4. Pineta planiziale mesoigrofila di pino domestico">5.4. Pineta planiziale mesoigrofila di pino domestico</option>
+                        <option value="5.5. Pineta collinare di pino domestico a eriche e cisti">5.5. Pineta collinare di pino domestico a eriche e cisti</option>
+                        <option value="5.6. Pineta collinare di pino domestico a roverella con arbusti del Pruneto">5.6. Pineta collinare di pino domestico a roverella con arbusti del Pruneto</option>
+                        <option value="6.1. Pineta di clima suboceanico di pino marittimo a Ulex europaeus">6.1. Pineta di clima suboceanico di pino marittimo a Ulex europaeus</option>
+                        <option value="6.2. Pineta sopramediterranea di pino marittimo">6.2. Pineta sopramediterranea di pino marittimo</option>
+                        <option value="6.3. Pineta mediterranea di pino marittimo su macchia acidofila">6.3. Pineta mediterranea di pino marittimo su macchia acidofila</option>
+                        <option value="6.4. Pineta costiera di pino marittimo">6.4. Pineta costiera di pino marittimo</option>
+                        <option value="6.5. Pineta di pino marittimo su ofioliti">6.5. Pineta di pino marittimo su ofioliti</option>
+                        <option value="7.1. Cipresseta a roverella e Spartium junceum">7.1. Cipresseta a roverella e Spartium junceum</option>
+                        <option value="7.2. Cipresseta su gramineto xerofilo">7.2. Cipresseta su gramineto xerofilo</option>
+                        <option value="8.1. Alneto igrofilo e mesoigrofilo di ontano nero e frassino meridionale">8.1. Alneto igrofilo e mesoigrofilo di ontano nero e frassino meridionale</option>
+                        <option value="8.2. Bosco interdunale di pioppi con farnia e frassino meridionale">8.2. Bosco interdunale di pioppi con farnia e frassino meridionale</option>
+                        <option value="8.3 Querco-carpineto extrazonale di farnia.">8.3 Querco-carpineto extrazonale di farnia.</option>
+                        <option value="9.1. Saliceto e pioppeto ripario">9.1. Saliceto e pioppeto ripario</option>
+                        <option value="9.2 Alneto ripario di ontano nero">9.2 Alneto ripario di ontano nero</option>
+                        <option value="10.1. Querceto mesotermofilo di roverella a Rosa sempervirens">10.1. Querceto mesotermofilo di roverella a Rosa sempervirens</option>
+                        <option value="10.2. Querceto mesofilo di roverella e cerro">10.2. Querceto mesofilo di roverella e cerro</option>
+                        <option value="10.3. Querceto mesoxerofilo di roverella a Cytisus sessilifolius">10.3. Querceto mesoxerofilo di roverella a Cytisus sessilifolius</option>
+                        <option value="10.4. Querceto acidofilo di roverella a cerro">10.4. Querceto acidofilo di roverella a cerro</option>
+                        <option value="10.5. Querceto termofilo di roverella con leccio e cerro">10.5. Querceto termofilo di roverella con leccio e cerro</option>
+                        <option value="11.1. Cerreta eutrofica ad Acer opalus s.l.">11.1. Cerreta eutrofica ad Acer opalus s.l.</option>
+                        <option value="11.2.Cerreta mesofila collinare">11.2.Cerreta mesofila collinare</option>
+                        <option value="11.3. Cerreta mesoxerofila">11.3. Cerreta mesoxerofila</option>
+                        <option value="11.4. Cerreta acidofila montana">11.4. Cerreta acidofila montana</option>
+                        <option value="11.5.Cerreta acidofila dei terrazzi a paleosuoli">11.5.Cerreta acidofila dei terrazzi a paleosuoli</option>
+                        <option value="11.6. Cerreta acidofila submediterranea a eriche">11.6. Cerreta acidofila submediterranea a eriche</option>
+                        <option value="11.7. Cerreta mesofila planiziale">11.7. Cerreta mesofila planiziale</option>
+                        <option value="11.8. Cerreta termoigrofila mediterranea">11.8. Cerreta termoigrofila mediterranea</option>
+                        <option value="11.9 Querceto di cerro e farnetto a Pulicaria odora">11.9 Querceto di cerro e farnetto a Pulicaria odora</option>
+                        <option value="12.1. Carpino-querceto mesofilo di cerro con rovere">12.1. Carpino-querceto mesofilo di cerro con rovere</option>
+                        <option value="12.2. Querceto acidofilo di rovere e cerro">12.2. Querceto acidofilo di rovere e cerro</option>
+                        <option value="12.3. Carpineto misto collinare (-submontano) a cerro">12.3. Carpineto misto collinare (-submontano) a cerro</option>
+                        <option value="13.1. Ostrieto pioniero dei calcari duri delle Apuane">13.1. Ostrieto pioniero dei calcari duri delle Apuane</option>
+                        <option value="13.2. Ostrieto mesofilo a Sesleria argentea delle Apuane">13.2. Ostrieto mesofilo a Sesleria argentea delle Apuane</option>
+                        <option value="13.3. Ostrieto pioniero delle balze marnoso-arenacee appenniniche">13.3. Ostrieto pioniero delle balze marnoso-arenacee appenniniche</option>
+                        <option value="13.4. Ostrieto delle aree calanchive delle alte valli dell'Arno e del Tevere">13.4. Ostrieto delle aree calanchive delle alte valli dell'Arno e del Tevere</option>
+                        <option value="13.5. Ostrieto termofilo dei calcari marnosi ad Asparagus acutifolius">13.5. Ostrieto termofilo dei calcari marnosi ad Asparagus acutifolius</option>
+                        <option value="13.6. Ostrieto mesofilo dei substrati silicatici">13.6. Ostrieto mesofilo dei substrati silicatici</option>
+                        <option value="14.1. Castagneto mesofilo su arenaria">14.1. Castagneto mesofilo su arenaria</option>
+                        <option value="14.2. Castagneto mesotrofico su rocce vulcaniche del Monte Amiata">14.2. Castagneto mesotrofico su rocce vulcaniche del Monte Amiata</option>
+                        <option value="14.3. Castagneto acidofilo">14.3. Castagneto acidofilo</option>
+                        <option value="14.4. Castagneto neutrofilo su rocce calcaree e scisti marnosi">14.4. Castagneto neutrofilo su rocce calcaree e scisti marnosi</option>
+                        <option value="15.1. Robinieto d'impianto">15.1. Robinieto d'impianto</option>
+                        <option value="16.1. Betuleto misto">16.1. Betuleto misto</option>
+                        <option value="17.1. Alneto autoctono di ontano bianco">17.1. Alneto autoctono di ontano bianco</option>
+                        <option value="17.2. Alneto d'impianto di ontano napoletano">17.2. Alneto d'impianto di ontano napoletano</option>
+                        <option value="18.1. Pineta eutrofica (acidofila) di pino nero">18.1. Pineta eutrofica (acidofila) di pino nero</option>
+                        <option value="18.2. Pineta neutro-acidoclina di pino nero">18.2. Pineta neutro-acidoclina di pino nero</option>
+                        <option value="18.3. Pineta neutro-basifila di pino nero">18.3. Pineta neutro-basifila di pino nero</option>
+                        <option value="19. Impianti di douglasia">19. Impianti di douglasia</option>
+                        <option value="20.1. Pteridieto">20.1. Pteridieto</option>
+                        <option value="20.2. Pruneto">20.2. Pruneto</option>
+                        <option value="20.3. Ginestreto collinare di Spartium junceum">20.3. Ginestreto collinare di Spartium junceum</option>
+                        <option value="20.4. Ginepreto di Juniperus communis">20.4. Ginepreto di Juniperus communis</option>
+                        <option value="20.5. Ginestreto Cytisus scoparius">20.5. Ginestreto Cytisus scoparius</option>
+                        <option value="20.6. Calluneto di quota">20.6. Calluneto di quota</option>
+                        <option value="21.1. Abetina altimontana di origine artificiale">21.1. Abetina altimontana di origine artificiale</option>
+                        <option value="21.2. Abetina montana di origine artificiale">21.2. Abetina montana di origine artificiale</option>
+                        <option value="21.3. Abetina sotto quota di origine aritificiale">21.3. Abetina sotto quota di origine aritificiale</option>
+                        <option value="21.4. Abetina mista autoctona del monte Amiata">21.4. Abetina mista autoctona del monte Amiata</option>
+                        <option value="21.5. Piceo-abieteto autoctono con faggio dell'Abetone">21.5. Piceo-abieteto autoctono con faggio dell'Abetone</option>
+                        <option value="22.1. Faggeta eutrofica a dentarie">22.1. Faggeta eutrofica a dentarie</option>
+                        <option value="22.2. Faggeta appenninica mesotrofica a Geranium nodosum e Luzula nivea">22.2. Faggeta appenninica mesotrofica a Geranium nodosum e Luzula nivea</option>
+                        <option value="22.3. Faggeta oligotrofica a Luzula pedemontana, Luzula nivea e Festuca heterophylla">22.3. Faggeta oligotrofica a Luzula pedemontana, Luzula nivea e Festuca heterophylla</option>
+                        <option value="22.4. Aceri-faggeto appenninico di quota">22.4. Aceri-faggeto appenninico di quota</option>
+                        <option value="22.5. Faggeta cespugliosa di vetta">22.5. Faggeta cespugliosa di vetta</option>
+                        <option value="22.6. Faggeta apuana a Sesleria argentea">22.6. Faggeta apuana a Sesleria argentea</option>
+                        <option value="22.7. Faggeta amiatina inferiore">22.7. Faggeta amiatina inferiore</option>
+                        <option value="22.8. Faggeta amiatina superiore ad Adenostyles australis">22.8. Faggeta amiatina superiore ad Adenostyles australis</option>
+                        <option value="22.9. Aceri-frassineto">22.9. Aceri-frassineto</option>
+                        <option value="23.1. Ontano napoletano">23.1. Ontano napoletano</option>
+                        <option value="23.2. Cedro dell'Atlante">23.2. Cedro dell'Atlante</option>
+                        <option value="23.4. Cipresso dell'Arizona">23.4. Cipresso dell'Arizona</option>
+                        <option value="23.5. Larice giapponese">23.5. Larice giapponese</option>
+                        <option value="23.6. Larice europeo">23.6. Larice europeo</option>
+                        <option value="23.7. Quercia rossa">23.7. Quercia rossa</option>
+                        <option value="23.8. Abete greco">23.8. Abete greco</option>
+                        <option value="23.9. Pino strobo">23.9. Pino strobo</option>
+                        <option value="23.10. Pino eccelso">23.10. Pino eccelso</option>
+                        <option value="23.11. Eucalipti">23.11. Eucalipti</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Descrizione del soprassuolo -->
+            <section class="form-section">
+                <div class="section-header">Descrizione del soprassuolo</div>
+                <div class="row">
+                    <div class="field-group">
+                        <label for="anno-rilievo">Anno rilievo</label>
+                        <input type="number" id="anno-rilievo" name="anno-rilievo" min="1900" max="9999" step="1">
+                    </div>
+                    <div class="field-group">
+                        <label for="piante-ettaro">Piante ad ettaro</label>
+                        <input type="number" id="piante-ettaro" name="piante-ettaro" max="999999" step="1">
+                    </div>
+                    <div class="field-group">
+                        <label for="eta-soprassuolo">Età del soprassuolo</label>
+                        <input type="number" id="eta-soprassuolo" name="eta-soprassuolo" max="999" step="1">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field-group">
+                        <label for="copertura">Copertura (%)</label>
+                        <div class="input-with-unit">
+                            <input type="number" step="1" max="100" id="copertura" name="copertura">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="fertilita">Fertilità della stazione</label>
+                        <select id="fertilita" name="fertilita">
+                            <option value="">Seleziona...</option>
+                            <option value="Scarsa">Scarsa</option>
+                            <option value="Bassa">Bassa</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tabella specie -->
+                <div class="species-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Specie</th>
+                                <th>%</th>
+                                <th>d (cm)</th>
+                                <th>h (m)</th>
+                                <th>V</th>
+                                <th>Vt/ha (mc)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="Specie 1"></td>
+                                <td><input type="number" step="1" max="99" class="no-spinner"></td>
+                                <td><input type="number" step="1" max="999" class="no-spinner"></td>
+                                <td><input type="number" step="1" max="999" class="no-spinner"></td>
+                                <td><input type="number" step="0.01"></td>
+                                <td><input type="number" step="0.01"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" id="add-species" class="add-row-btn">+ Aggiungi specie</button>
+                </div>
+
+                <!-- Calcoli volume -->
+                <div class="volume-calculations">
+                    <div class="row">
+                        <div class="field-group">
+                            <label for="volume-totale">Volume totale (mc)</label>
+                            <input type="number" step="0.01" id="volume-totale" name="volume-totale" readonly>
+                        </div>
+                        <div class="field-group">
+                            <label for="imd">Imd</label>
+                            <input type="number" step="0.01" id="imd" name="imd" readonly>
+                        </div>
+                        <div class="field-group">
+                            <label for="imh">Imh</label>
+                            <input type="number" step="0.01" id="imh" name="imh" readonly>
+                        </div>
+                        <div class="field-group">
+                            <label for="imv">Imv</label>
+                            <input type="number" step="0.01" id="imv" name="imv" readonly>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Registro interventi -->
+            <section class="form-section">
+                <div class="section-header">Registro interventi</div>
+                <div class="field-group">
+                    <label for="ultimo-intervento">Ultimo intervento effettuato</label>
+                    <input type="text" id="ultimo-intervento" name="ultimo-intervento">
+                </div>
+                
+                <div class="intervention-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Intervento programmato</th>
+                                <th>Anno</th>
+                                <th>Età</th>
+                                <th>Provv (mc)</th>
+                                <th>Ripresa (mc)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="number" min="1900" max="2050"></td>
+                                <td><input type="number"></td>
+                                <td><input type="number" step="0.01"></td>
+                                <td><input type="number" step="0.01"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="field-group">
+                        <label for="intensita-intervento">Intensità intervento</label>
+                        <input type="text" id="intensita-intervento" name="intensita-intervento">
+                    </div>
+                    <div class="field-group">
+                        <label for="autorizzazione">Autorizzazione</label>
+                        <input type="text" id="autorizzazione" name="autorizzazione">
+                    </div>
+                    <div class="field-group">
+                        <label for="deroga">Deroga al regolamento</label>
+                        <input type="text" id="deroga" name="deroga">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Riferimenti catastali -->
+            <section class="form-section">
+                <div class="section-header">Riferimenti catastali</div>
+                <div class="cadastral-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Comune</th>
+                                <th>Foglio</th>
+                                <th>Part</th>
+                                <th>Sup. (ha)</th>
+                                <th>Comune</th>
+                                <th>Foglio</th>
+                                <th>Part</th>
+                                <th>Sup. (ha)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="number" step="0.01"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="number" step="0.01"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="number" step="0.01"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="number" step="0.01"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Descrizione -->
+            <section class="form-section">
+                <div class="field-group full-width">
+                    <label for="descrizione">Descrizione</label>
+                    <textarea id="descrizione" name="descrizione" rows="6" placeholder="Inserire qui eventuali note descrittive..."></textarea>
+                </div>
+            </section>
+
+            <!-- Pulsanti di controllo -->
+            <div class="form-actions">
+                <button type="button" id="save-btn" class="btn btn-primary">💾 Salva</button>
+                <button type="button" id="load-btn" class="btn btn-secondary">📁 Carica</button>
+                <button type="button" id="export-btn" class="btn btn-secondary">📤 Esporta</button>
+                <button type="reset" class="btn btn-danger">🗑️ Cancella tutto</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Registrazione del Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registrato con successo: ', registration.scope);
+                    }, function(err) {
+                        console.log('ServiceWorker registrazione fallita: ', err);
+                    });
+            });
+        }
+
+        // Funzionalità per aggiungere righe specie
+        document.getElementById('add-species').addEventListener('click', function() {
+            const tbody = document.querySelector('.species-table tbody');
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Nuova specie"></td>
+                <td><input type="number" step="1" max="99" class="no-spinner"></td>
+                <td><input type="number" step="1" max="999" class="no-spinner"></td>
+                <td><input type="number" step="1" max="999" class="no-spinner"></td>
+                <td><input type="number" step="0.01"></td>
+                <td><input type="number" step="0.01"></td>
+            `;
+        });
+
+        // Salvataggio dati nel localStorage
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const formData = new FormData(document.getElementById('forestry-form'));
+            const data = Object.fromEntries(formData);
+            localStorage.setItem('forestry-survey-' + Date.now(), JSON.stringify(data));
+            alert('Dati salvati con successo!');
+        });
+
+        // Validazione decimali per superficie
+        function validateDecimals(inputElement) {
+            const value = inputElement.value;
+            if (value && value.includes('.')) {
+                const decimals = value.split('.')[1];
+                if (decimals && decimals.length > 4) {
+                    alert('Errore: Sono consentiti massimo 4 decimali per i campi superficie');
+                    inputElement.value = parseFloat(value).toFixed(4);
+                }
+            }
+        }
+
+        document.getElementById('superficie-particella').addEventListener('blur', function() {
+            validateDecimals(this);
+        });
+
+        document.getElementById('superficie-sottoparticella').addEventListener('blur', function() {
+            validateDecimals(this);
+        });
+
+        // Auto-save ogni 30 secondi
+        setInterval(function() {
+            const formData = new FormData(document.getElementById('forestry-form'));
+            const data = Object.fromEntries(formData);
+            localStorage.setItem('forestry-survey-autosave', JSON.stringify(data));
+        }, 30000);
+
+        // Caricamento dati salvati
+        window.addEventListener('load', function() {
+            const savedData = localStorage.getItem('forestry-survey-autosave');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                Object.keys(data).forEach(key => {
+                    const element = document.querySelector(`[name="${key}"]`);
+                    if (element) {
+                        element.value = data[key];
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
