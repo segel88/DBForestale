@@ -12,10 +12,148 @@
     <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
 </head>
 <body>
-    <div class="container">
+    <!-- Home Page -->
+    <div id="home-page" class="home-container">
+        <header class="home-header">
+            <h1>DB Forestale</h1>
+            <p>Sistema di gestione dati forestali</p>
+        </header>
+
+        <main class="home-main">
+            <div class="home-buttons">
+                <button type="button" id="new-project-btn" class="home-btn home-btn-primary">
+                    <span class="btn-icon">📋</span>
+                    <span class="btn-text">Crea nuovo progetto</span>
+                </button>
+                
+                <button type="button" id="load-project-btn" class="home-btn home-btn-secondary">
+                    <span class="btn-icon">📁</span>
+                    <span class="btn-text">Carica progetto</span>
+                </button>
+                
+                <button type="button" id="manage-projects-btn" class="home-btn home-btn-secondary">
+                    <span class="btn-icon">📊</span>
+                    <span class="btn-text">Gestione progetti</span>
+                </button>
+                
+                <button type="button" id="settings-btn" class="home-btn home-btn-secondary">
+                    <span class="btn-icon">⚙️</span>
+                    <span class="btn-text">Impostazioni</span>
+                </button>
+                
+                <button type="button" id="guide-btn" class="home-btn home-btn-secondary">
+                    <span class="btn-icon">❓</span>
+                    <span class="btn-text">Guida</span>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Project Creation Modal -->
+    <div id="project-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Crea nuovo progetto</h2>
+            </div>
+            <div class="modal-body">
+                <form id="project-form">
+                    <div class="form-group">
+                        <label for="project-name">Nome del progetto</label>
+                        <input type="text" id="project-name" name="project-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-location">Location</label>
+                        <input type="text" id="project-location" name="project-location" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-client">Committente</label>
+                        <input type="text" id="project-client" name="project-client" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project-authority">Ente di riferimento</label>
+                        <input type="text" id="project-authority" name="project-authority" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="start-project-btn" class="modal-btn modal-btn-primary">Avvia il progetto</button>
+                <button type="button" id="cancel-project-btn" class="modal-btn modal-btn-secondary">Annulla progetto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Overview Page (initially hidden) -->
+    <div id="project-page" class="project-container hidden">
+        <header class="project-header">
+            <h1>Progetto</h1>
+            <button id="back-to-home-btn" class="back-btn">← Torna alla home</button>
+        </header>
+
+        <div class="project-details">
+            <div class="project-info-card">
+                <h2>Dettagli Progetto</h2>
+                <div class="project-info">
+                    <div class="info-item">
+                        <label>Nome del progetto:</label>
+                        <span id="display-project-name"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Location:</label>
+                        <span id="display-project-location"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Committente:</label>
+                        <span id="display-project-client"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Ente di riferimento:</label>
+                        <span id="display-project-authority"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="particella-actions">
+                <button type="button" id="add-particella-btn" class="btn btn-primary">
+                    <span class="btn-icon">📋</span>
+                    Aggiungi particella
+                </button>
+            </div>
+
+            <div class="particella-list">
+                <h3>Particelle del Progetto</h3>
+                <div class="particella-table-container">
+                    <table class="particella-table">
+                        <thead>
+                            <tr>
+                                <th>Particella</th>
+                                <th>Sub. part.</th>
+                                <th>Superficie (ha)</th>
+                                <th>Specie</th>
+                                <th>Intervento Programmato</th>
+                                <th>Anno</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="particella-table-body">
+                            <!-- Particella rows will be added here dynamically -->
+                        </tbody>
+                    </table>
+                    <div id="empty-particelle-message" class="empty-message">
+                        Nessuna particella ancora aggiunta al progetto
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Form (initially hidden) -->
+    <div id="main-form" class="container hidden">
         <header class="form-header">
             <h1>SCHEDA DI RILIEVO</h1>
-            <div class="db-key">Chiave db: <input type="text" id="chiave-db" placeholder=""></div>
+            <div class="db-key">Chiave db: <input type="text" id="chiave-db" maxlength="5" placeholder=""></div>
         </header>
 
         <form id="forestry-form">
@@ -82,8 +220,9 @@
                     <div class="right-column">
                         <div class="field-group">
                             <label for="viabilita">Viabilità e imposti</label>
-                            <textarea id="viabilita" name="viabilita" rows="4"></textarea>
+                            <input type="text" id="viabilita" name="viabilita">
                         </div>
+                        <button type="button" id="add-infrastruttura-btn" class="add-row-btn">+ Aggiungi infrastruttura</button>
                     </div>
                 </div>
             </section>
@@ -316,16 +455,80 @@
                                 <th>h (m)</th>
                                 <th>V</th>
                                 <th>Vt/ha (mc)</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="text" placeholder="Specie 1"></td>
+                                <td>
+                                    <select>
+                                        <option value="">Seleziona specie...</option>
+                                        <option value="Abete bianco (Abies alba)">Abete bianco <em>(Abies alba)</em></option>
+                                        <option value="Abete rosso (Picea abies)">Abete rosso <em>(Picea abies)</em></option>
+                                        <option value="Acero campestre (Acer campestre)">Acero campestre <em>(Acer campestre)</em></option>
+                                        <option value="Acero di monte (Acer pseudoplatanus)">Acero di monte <em>(Acer pseudoplatanus)</em></option>
+                                        <option value="Acero opalo (Acer opalus)">Acero opalo <em>(Acer opalus)</em></option>
+                                        <option value="Acero riccio (Acer lobelii)">Acero riccio <em>(Acer lobelii)</em></option>
+                                        <option value="Acero tribolo (Acer tataricum)">Acero tribolo <em>(Acer tataricum)</em></option>
+                                        <option value="Ailanto (Ailanthus altissima)">Ailanto <em>(Ailanthus altissima)</em></option>
+                                        <option value="Betulla (Betula pendula)">Betulla <em>(Betula pendula)</em></option>
+                                        <option value="Carpino bianco (Carpinus betulus)">Carpino bianco <em>(Carpinus betulus)</em></option>
+                                        <option value="Carpino nero (Ostrya carpinifolia)">Carpino nero <em>(Ostrya carpinifolia)</em></option>
+                                        <option value="Castagno (Castanea sativa)">Castagno <em>(Castanea sativa)</em></option>
+                                        <option value="Cedro dell'Atlante (Cedrus atlantica)">Cedro dell'Atlante <em>(Cedrus atlantica)</em></option>
+                                        <option value="Cedro deodara (Cedrus deodara)">Cedro deodara <em>(Cedrus deodara)</em></option>
+                                        <option value="Cedro del Libano (Cedrus libani)">Cedro del Libano <em>(Cedrus libani)</em></option>
+                                        <option value="Cerro (Quercus cerris)">Cerro <em>(Quercus cerris)</em></option>
+                                        <option value="Chamaecyparis (Chamaecyparis sp)">Chamaecyparis <em>(Chamaecyparis sp)</em></option>
+                                        <option value="Ciavardello (Quercus robur)">Ciavardello <em>(Quercus robur)</em></option>
+                                        <option value="Ciliegio (Prunus avium)">Ciliegio <em>(Prunus avium)</em></option>
+                                        <option value="Cipresso comune (Cupressus sempervirens)">Cipresso comune <em>(Cupressus sempervirens)</em></option>
+                                        <option value="Cipresso dell'Arizona (Cupressus arizonica)">Cipresso dell'Arizona <em>(Cupressus arizonica)</em></option>
+                                        <option value="Cipresso di Monterey (Cupressus macrocarpa)">Cipresso di Monterey <em>(Cupressus macrocarpa)</em></option>
+                                        <option value="Corbezzolo (Arbutus unedo)">Corbezzolo <em>(Arbutus unedo)</em></option>
+                                        <option value="Douglasia (Pseudotsuga menziesii)">Douglasia <em>(Pseudotsuga menziesii)</em></option>
+                                        <option value="Faggio (Fagus sylvatica)">Faggio <em>(Fagus sylvatica)</em></option>
+                                        <option value="Farnetto (Fraxinus ornus)">Farnetto <em>(Fraxinus ornus)</em></option>
+                                        <option value="Farnia (Fraxinus excelsior)">Farnia <em>(Fraxinus excelsior)</em></option>
+                                        <option value="Frassino maggiore (Fraxinus angustifolia)">Frassino maggiore <em>(Fraxinus angustifolia)</em></option>
+                                        <option value="Frassino ossifillo (Fraxinus oxycarpa)">Frassino ossifillo <em>(Fraxinus oxycarpa)</em></option>
+                                        <option value="Ippocastano (Aesculus hippocastanum)">Ippocastano <em>(Aesculus hippocastanum)</em></option>
+                                        <option value="Leccio (Quercus ilex)">Leccio <em>(Quercus ilex)</em></option>
+                                        <option value="Nocciolo (Corylus avellana)">Nocciolo <em>(Corylus avellana)</em></option>
+                                        <option value="Noce (Juglans regia)">Noce <em>(Juglans regia)</em></option>
+                                        <option value="Ontano bianco (Alnus incana)">Ontano bianco <em>(Alnus incana)</em></option>
+                                        <option value="Ontano napoletano (Alnus cordata)">Ontano napoletano <em>(Alnus cordata)</em></option>
+                                        <option value="Ontano nero (Alnus glutinosa)">Ontano nero <em>(Alnus glutinosa)</em></option>
+                                        <option value="Orniello (Fraxinus ornus)">Orniello <em>(Fraxinus ornus)</em></option>
+                                        <option value="Pino d'Aleppo (Pinus halepensis)">Pino d'Aleppo <em>(Pinus halepensis)</em></option>
+                                        <option value="Pino domestico (Pinus pinea)">Pino domestico <em>(Pinus pinea)</em></option>
+                                        <option value="Pino insigne (Pinus radiata)">Pino insigne <em>(Pinus radiata)</em></option>
+                                        <option value="Pino loricato (Pinus heldreichii)">Pino loricato <em>(Pinus heldreichii)</em></option>
+                                        <option value="Pino marittimo (Pinus pinaster)">Pino marittimo <em>(Pinus pinaster)</em></option>
+                                        <option value="Pino nero (Pinus nigra)">Pino nero <em>(Pinus nigra)</em></option>
+                                        <option value="Pino silvestre (Pinus sylvestris)">Pino silvestre <em>(Pinus sylvestris)</em></option>
+                                        <option value="Pioppo bianco (Populus alba)">Pioppo bianco <em>(Populus alba)</em></option>
+                                        <option value="Pioppo cinerino (Populus cinerea)">Pioppo cinerino <em>(Populus cinerea)</em></option>
+                                        <option value="Pioppo nero (Populus nigra)">Pioppo nero <em>(Populus nigra)</em></option>
+                                        <option value="Pioppo tremulo (Populus tremula)">Pioppo tremulo <em>(Populus tremula)</em></option>
+                                        <option value="Robinia (Robinia pseudoacacia)">Robinia <em>(Robinia pseudoacacia)</em></option>
+                                        <option value="Rovere (Quercus robur)">Rovere <em>(Quercus robur)</em></option>
+                                        <option value="Roverella (Quercus petraea)">Roverella <em>(Quercus petraea)</em></option>
+                                        <option value="Salice (Salix spp)">Salice <em>(Salix spp)</em></option>
+                                        <option value="Sorbo degli uccellatori (Sorbus aucuparia)">Sorbo degli uccellatori <em>(Sorbus aucuparia)</em></option>
+                                        <option value="Sorbo domestico (Sorbus domestica)">Sorbo domestico <em>(Sorbus domestica)</em></option>
+                                        <option value="Sughera (Quercus suber)">Sughera <em>(Quercus suber)</em></option>
+                                        <option value="Tasso (Taxus baccata)">Tasso <em>(Taxus baccata)</em></option>
+                                        <option value="Thuja (Thuja occidentalis)">Thuja <em>(Thuja occidentalis)</em></option>
+                                        <option value="Tiglio (Tilia cordata)">Tiglio <em>(Tilia cordata)</em></option>
+                                    </select>
+                                </td>
                                 <td><input type="number" step="1" max="99" class="no-spinner"></td>
                                 <td><input type="number" step="1" max="999" class="no-spinner"></td>
                                 <td><input type="number" step="1" max="999" class="no-spinner"></td>
+                                <td><input type="number" step="0.01" max="9999.99"></td>
                                 <td><input type="number" step="0.01"></td>
-                                <td><input type="number" step="0.01"></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
@@ -337,19 +540,19 @@
                     <div class="row">
                         <div class="field-group">
                             <label for="volume-totale">Volume totale (mc)</label>
-                            <input type="number" step="0.01" id="volume-totale" name="volume-totale" readonly>
+                            <input type="number" step="0.01" max="9999.99" id="volume-totale" name="volume-totale" readonly>
                         </div>
                         <div class="field-group">
                             <label for="imd">Imd</label>
-                            <input type="number" step="0.01" id="imd" name="imd" readonly>
+                            <input type="number" step="0.1" max="99.9" id="imd" name="imd" readonly>
                         </div>
                         <div class="field-group">
                             <label for="imh">Imh</label>
-                            <input type="number" step="0.01" id="imh" name="imh" readonly>
+                            <input type="number" step="0.1" max="99.9" id="imh" name="imh" readonly>
                         </div>
                         <div class="field-group">
                             <label for="imv">Imv</label>
-                            <input type="number" step="0.01" id="imv" name="imv" readonly>
+                            <input type="number" step="0.1" max="99.9" id="imv" name="imv" readonly>
                         </div>
                     </div>
                 </div>
@@ -358,9 +561,48 @@
             <!-- Registro interventi -->
             <section class="form-section">
                 <div class="section-header">Registro interventi</div>
-                <div class="field-group">
-                    <label for="ultimo-intervento">Ultimo intervento effettuato</label>
-                    <input type="text" id="ultimo-intervento" name="ultimo-intervento">
+                <div class="ultimo-intervento-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ultimo intervento effettuato</th>
+                                <th>Anno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select id="ultimo-intervento" name="ultimo-intervento">
+                                        <option value="">Seleziona intervento...</option>
+                                        <option value="Conversione a ceduo">Conversione a ceduo</option>
+                                        <option value="Diradamento dal basso">Diradamento dal basso</option>
+                                        <option value="Diradamento del ceduo">Diradamento del ceduo</option>
+                                        <option value="Diradamento geometrico">Diradamento geometrico</option>
+                                        <option value="Diradamento selettivo">Diradamento selettivo</option>
+                                        <option value="Manutenzione attorno manufatto">Manutenzione attorno manufatto</option>
+                                        <option value="Manutenzione idraulica">Manutenzione idraulica</option>
+                                        <option value="Manutenzione lungo viabilità">Manutenzione lungo viabilità</option>
+                                        <option value="Recupero dell'uso agricolo storico del suolo">Recupero dell'uso agricolo storico del suolo</option>
+                                        <option value="Sfollo e spalcatura">Sfollo e spalcatura</option>
+                                        <option value="Sostituzione di specie">Sostituzione di specie</option>
+                                        <option value="Taglio a scelta">Taglio a scelta</option>
+                                        <option value="Taglio della fustaia su ceduo">Taglio della fustaia su ceduo</option>
+                                        <option value="Taglio del ceduo a sterzo">Taglio del ceduo a sterzo</option>
+                                        <option value="Taglio del ceduo composto">Taglio del ceduo composto</option>
+                                        <option value="Taglio del ceduo coniferato">Taglio del ceduo coniferato</option>
+                                        <option value="Taglio del ceduo intensamente matricinato">Taglio del ceduo intensamente matricinato</option>
+                                        <option value="Taglio del ceduo semplice con rilascio di matricine">Taglio del ceduo semplice con rilascio di matricine</option>
+                                        <option value="Taglio di avviamento all'alto fusto">Taglio di avviamento all'alto fusto</option>
+                                        <option value="Taglio raso della fustaia con rimboschimento artificiale">Taglio raso della fustaia con rimboschimento artificiale</option>
+                                        <option value="Taglio saltuario">Taglio saltuario</option>
+                                        <option value="Trasformazione da terreno saldo a periodica lavorazione">Trasformazione da terreno saldo a periodica lavorazione</option>
+                                        <option value="Altro: dettagliato in descrizione">Altro: dettagliato in descrizione</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" id="ultimo-intervento-anno" name="ultimo-intervento-anno" min="1900" max="2050"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 
                 <div class="intervention-table">
@@ -368,36 +610,72 @@
                         <thead>
                             <tr>
                                 <th>Intervento programmato</th>
+                                <th>Superficie (ha)</th>
                                 <th>Anno</th>
                                 <th>Età</th>
                                 <th>Provv (mc)</th>
                                 <th>Ripresa (mc)</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="text"></td>
+                                <td>
+                                    <select>
+                                        <option value="">Seleziona intervento...</option>
+                                        <option value="Conversione a ceduo">Conversione a ceduo</option>
+                                        <option value="Diradamento dal basso">Diradamento dal basso</option>
+                                        <option value="Diradamento del ceduo">Diradamento del ceduo</option>
+                                        <option value="Diradamento geometrico">Diradamento geometrico</option>
+                                        <option value="Diradamento selettivo">Diradamento selettivo</option>
+                                        <option value="Manutenzione attorno manufatto">Manutenzione attorno manufatto</option>
+                                        <option value="Manutenzione idraulica">Manutenzione idraulica</option>
+                                        <option value="Manutenzione lungo viabilità">Manutenzione lungo viabilità</option>
+                                        <option value="Recupero dell'uso agricolo storico del suolo">Recupero dell'uso agricolo storico del suolo</option>
+                                        <option value="Sfollo e spalcatura">Sfollo e spalcatura</option>
+                                        <option value="Sostituzione di specie">Sostituzione di specie</option>
+                                        <option value="Taglio a scelta">Taglio a scelta</option>
+                                        <option value="Taglio della fustaia su ceduo">Taglio della fustaia su ceduo</option>
+                                        <option value="Taglio del ceduo a sterzo">Taglio del ceduo a sterzo</option>
+                                        <option value="Taglio del ceduo composto">Taglio del ceduo composto</option>
+                                        <option value="Taglio del ceduo coniferato">Taglio del ceduo coniferato</option>
+                                        <option value="Taglio del ceduo intensamente matricinato">Taglio del ceduo intensamente matricinato</option>
+                                        <option value="Taglio del ceduo semplice con rilascio di matricine">Taglio del ceduo semplice con rilascio di matricine</option>
+                                        <option value="Taglio di avviamento all'alto fusto">Taglio di avviamento all'alto fusto</option>
+                                        <option value="Taglio raso della fustaia con rimboschimento artificiale">Taglio raso della fustaia con rimboschimento artificiale</option>
+                                        <option value="Taglio saltuario">Taglio saltuario</option>
+                                        <option value="Trasformazione da terreno saldo a periodica lavorazione">Trasformazione da terreno saldo a periodica lavorazione</option>
+                                        <option value="Altro: dettagliato in descrizione">Altro: dettagliato in descrizione</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="0.0001" max="999.9999"></td>
                                 <td><input type="number" min="1900" max="2050"></td>
                                 <td><input type="number"></td>
-                                <td><input type="number" step="0.01"></td>
-                                <td><input type="number" step="0.01"></td>
+                                <td><input type="number" step="0.01" max="9999.99"></td>
+                                <td><input type="number" step="0.01" max="9999.99"></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
+                    <button type="button" id="add-intervention" class="add-row-btn">+ Aggiungi intervento</button>
                 </div>
 
                 <div class="row">
                     <div class="field-group">
                         <label for="intensita-intervento">Intensità intervento</label>
-                        <input type="text" id="intensita-intervento" name="intensita-intervento">
+                        <input type="number" step="1" max="99" id="intensita-intervento" name="intensita-intervento">
                     </div>
                     <div class="field-group">
-                        <label for="autorizzazione">Autorizzazione</label>
-                        <input type="text" id="autorizzazione" name="autorizzazione">
+                        <label for="autorizzazione">
+                            <input type="checkbox" id="autorizzazione" name="autorizzazione">
+                            Autorizzazione
+                        </label>
                     </div>
                     <div class="field-group">
-                        <label for="deroga">Deroga al regolamento</label>
-                        <input type="text" id="deroga" name="deroga">
+                        <label for="deroga">
+                            <input type="checkbox" id="deroga" name="deroga">
+                            Deroga al regolamento
+                        </label>
                     </div>
                 </div>
             </section>
@@ -405,43 +683,50 @@
             <!-- Riferimenti catastali -->
             <section class="form-section">
                 <div class="section-header">Riferimenti catastali</div>
-                <div class="cadastral-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Comune</th>
-                                <th>Foglio</th>
-                                <th>Part</th>
-                                <th>Sup. (ha)</th>
-                                <th>Comune</th>
-                                <th>Foglio</th>
-                                <th>Part</th>
-                                <th>Sup. (ha)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="number" step="0.01"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="number" step="0.01"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="number" step="0.01"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="number" step="0.01"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="cadastral-container">
+                    <div class="cadastral-column">
+                        <div class="cadastral-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Comune</th>
+                                        <th>Foglio</th>
+                                        <th>Part</th>
+                                        <th>Sup. (ha)</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cadastral-left-tbody">
+                                    <tr>
+                                        <td><input type="text"></td>
+                                        <td><input type="text"></td>
+                                        <td><input type="text"></td>
+                                        <td><input type="number" step="0.01"></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" id="add-cadastral" class="add-row-btn">+ Aggiungi particella</button>
+                        </div>
+                    </div>
+                    <div class="cadastral-column">
+                        <div class="cadastral-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Comune</th>
+                                        <th>Foglio</th>
+                                        <th>Part</th>
+                                        <th>Sup. (ha)</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cadastral-right-tbody">
+                                    <!-- Right column starts empty, populated when left column has 4+ rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -464,6 +749,269 @@
     </div>
 
     <script>
+        // Page management
+        function showHomePage() {
+            document.getElementById('home-page').classList.remove('hidden');
+            document.getElementById('project-page').classList.add('hidden');
+            document.getElementById('main-form').classList.add('hidden');
+        }
+
+        function showProjectPage() {
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('project-page').classList.remove('hidden');
+            document.getElementById('main-form').classList.add('hidden');
+            loadProjectData();
+        }
+
+        function showMainForm() {
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('project-page').classList.add('hidden');
+            document.getElementById('main-form').classList.remove('hidden');
+        }
+
+        function loadProjectData() {
+            const projectData = JSON.parse(localStorage.getItem('current-project'));
+            if (projectData) {
+                document.getElementById('display-project-name').textContent = projectData.name;
+                document.getElementById('display-project-location').textContent = projectData.location;
+                document.getElementById('display-project-client').textContent = projectData.client;
+                document.getElementById('display-project-authority').textContent = projectData.authority;
+                loadParticellaCards();
+            }
+        }
+
+        function loadParticellaCards() {
+            const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+            const tableBody = document.getElementById('particella-table-body');
+            const emptyMessage = document.getElementById('empty-particelle-message');
+            const table = document.querySelector('.particella-table');
+            
+            tableBody.innerHTML = '';
+            
+            if (particelleData.length === 0) {
+                table.style.display = 'none';
+                emptyMessage.style.display = 'flex';
+            } else {
+                table.style.display = 'table';
+                emptyMessage.style.display = 'none';
+                
+                particelleData.forEach((particella, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'particella-row';
+                    
+                    // Extract PF and SPF data
+                    let pfValue = 'Non specificata';
+                    let spfValue = 'Non specificata';
+                    if (particella.formData) {
+                        pfValue = particella.formData['particella'] || 'Non specificata';
+                        spfValue = particella.formData['sottoparticella'] || 'Non specificata';
+                    }
+                    
+                    // Extract species data (first species from the form data)
+                    let specieName = 'Non specificata';
+                    if (particella.formData && particella.formData.species) {
+                        specieName = particella.formData.species;
+                    }
+                    
+                    // Extract intervention data
+                    let interventoProgr = 'Non specificato';
+                    let anno = 'Non specificato';
+                    if (particella.formData) {
+                        // Check for intervention table data or ultimo intervento
+                        interventoProgr = particella.formData['ultimo-intervento'] || 'Non specificato';
+                        anno = particella.formData['ultimo-intervento-anno'] || 'Non specificato';
+                    }
+                    
+                    row.innerHTML = `
+                        <td class="particella-name">${pfValue}</td>
+                        <td class="particella-spf">${spfValue}</td>
+                        <td class="particella-superficie">${particella.superficie || 'Non specificata'}</td>
+                        <td class="particella-specie">${specieName}</td>
+                        <td class="particella-intervento">${interventoProgr}</td>
+                        <td class="particella-anno">${anno}</td>
+                        <td class="particella-actions">
+                            <button class="action-btn edit-btn" onclick="editParticella(${index})" title="Modifica">✏️</button>
+                            <button class="action-btn duplicate-btn" onclick="duplicateParticella(${index})" title="Duplica">📋</button>
+                            <button class="action-btn delete-btn" onclick="deleteParticella(${index})" title="Elimina">🗑️</button>
+                        </td>
+                    `;
+                    
+                    // Make row clickable (except for action buttons)
+                    row.addEventListener('click', function(e) {
+                        if (!e.target.classList.contains('action-btn')) {
+                            editParticella(index);
+                        }
+                    });
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+        // Home page navigation
+        document.getElementById('new-project-btn').addEventListener('click', function() {
+            document.getElementById('project-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancel-project-btn').addEventListener('click', function() {
+            document.getElementById('project-modal').classList.add('hidden');
+            document.getElementById('project-form').reset();
+        });
+
+        document.getElementById('start-project-btn').addEventListener('click', function() {
+            const form = document.getElementById('project-form');
+            if (form.checkValidity()) {
+                // Save project data
+                const projectData = {
+                    name: document.getElementById('project-name').value,
+                    location: document.getElementById('project-location').value,
+                    client: document.getElementById('project-client').value,
+                    authority: document.getElementById('project-authority').value,
+                    createdAt: new Date().toISOString()
+                };
+                
+                localStorage.setItem('current-project', JSON.stringify(projectData));
+                localStorage.setItem('project-' + Date.now(), JSON.stringify(projectData));
+                
+                // Close modal and show project page
+                document.getElementById('project-modal').classList.add('hidden');
+                showProjectPage();
+            } else {
+                alert('Compilare tutti i campi richiesti.');
+            }
+        });
+
+        // Placeholder functions for other buttons
+        document.getElementById('load-project-btn').addEventListener('click', function() {
+            alert('Funzionalità "Carica progetto" in sviluppo');
+        });
+
+        document.getElementById('manage-projects-btn').addEventListener('click', function() {
+            alert('Funzionalità "Gestione progetti" in sviluppo');
+        });
+
+        document.getElementById('settings-btn').addEventListener('click', function() {
+            alert('Funzionalità "Impostazioni" in sviluppo');
+        });
+
+        document.getElementById('guide-btn').addEventListener('click', function() {
+            alert('Funzionalità "Guida" in sviluppo');
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('project-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+                document.getElementById('project-form').reset();
+            }
+        });
+
+        // Project page navigation
+        document.getElementById('back-to-home-btn').addEventListener('click', function() {
+            showHomePage();
+        });
+
+        document.getElementById('add-particella-btn').addEventListener('click', function() {
+            createNewParticella();
+        });
+
+        // Particella management functions
+        function createNewParticella() {
+            const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+            const newParticella = {
+                id: Date.now(),
+                createdAt: new Date().toISOString(),
+                localita: '',
+                superficie: ''
+            };
+            
+            // Store current particella index for editing
+            localStorage.setItem('current-particella-index', particelleData.length.toString());
+            particelleData.push(newParticella);
+            localStorage.setItem('project-particelle', JSON.stringify(particelleData));
+            
+            // Navigate to form for editing the new particella
+            showMainForm();
+        }
+
+        function editParticella(index) {
+            localStorage.setItem('current-particella-index', index.toString());
+            showMainForm();
+        }
+
+        function duplicateParticella(index) {
+            const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+            const originalParticella = particelleData[index];
+            
+            if (originalParticella) {
+                const duplicatedParticella = {
+                    ...originalParticella,
+                    id: Date.now(),
+                    createdAt: new Date().toISOString(),
+                    lastModified: new Date().toISOString()
+                };
+                
+                particelleData.push(duplicatedParticella);
+                localStorage.setItem('project-particelle', JSON.stringify(particelleData));
+                loadParticellaCards();
+                
+                // Show confirmation
+                alert('Particella duplicata con successo!');
+            }
+        }
+
+        function deleteParticella(index) {
+            if (confirm('Sei sicuro di voler eliminare questa particella?')) {
+                const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+                particelleData.splice(index, 1);
+                localStorage.setItem('project-particelle', JSON.stringify(particelleData));
+                loadParticellaCards();
+            }
+        }
+
+        // Add back to project button in main form
+        function addBackToProjectButton() {
+            const formHeader = document.querySelector('.form-header');
+            if (formHeader && !document.getElementById('back-to-project-btn')) {
+                const backBtn = document.createElement('button');
+                backBtn.id = 'back-to-project-btn';
+                backBtn.type = 'button';
+                backBtn.className = 'back-btn';
+                backBtn.innerHTML = '← Torna al progetto';
+                backBtn.addEventListener('click', function() {
+                    // Save current form data before going back
+                    const formData = new FormData(document.getElementById('forestry-form'));
+                    const data = Object.fromEntries(formData);
+                    const particellaIndex = localStorage.getItem('current-particella-index');
+                    
+                    if (particellaIndex !== null) {
+                        const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+                        if (particelleData[parseInt(particellaIndex)]) {
+                            // Update particella data with form values
+                            particelleData[parseInt(particellaIndex)] = {
+                                ...particelleData[parseInt(particellaIndex)],
+                                localita: data.localita || '',
+                                superficie: data['superficie-particella'] || '',
+                                formData: data,
+                                lastModified: new Date().toISOString()
+                            };
+                            localStorage.setItem('project-particelle', JSON.stringify(particelleData));
+                        }
+                    }
+                    
+                    showProjectPage();
+                });
+                formHeader.appendChild(backBtn);
+            }
+        }
+
+        // Initialize back button when form is shown
+        const originalShowMainForm = showMainForm;
+        showMainForm = function() {
+            originalShowMainForm();
+            setTimeout(() => addBackToProjectButton(), 100);
+        };
+
         // Registrazione del Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
@@ -481,14 +1029,186 @@
             const tbody = document.querySelector('.species-table tbody');
             const newRow = tbody.insertRow();
             newRow.innerHTML = `
-                <td><input type="text" placeholder="Nuova specie"></td>
+                <td>
+                    <select>
+                        <option value="">Seleziona specie...</option>
+                        <option value="Abete bianco (Abies alba)">Abete bianco <em>(Abies alba)</em></option>
+                        <option value="Abete rosso (Picea abies)">Abete rosso <em>(Picea abies)</em></option>
+                        <option value="Acero campestre (Acer campestre)">Acero campestre <em>(Acer campestre)</em></option>
+                        <option value="Acero di monte (Acer pseudoplatanus)">Acero di monte <em>(Acer pseudoplatanus)</em></option>
+                        <option value="Acero opalo (Acer opalus)">Acero opalo <em>(Acer opalus)</em></option>
+                        <option value="Acero riccio (Acer lobelii)">Acero riccio <em>(Acer lobelii)</em></option>
+                        <option value="Acero tribolo (Acer tataricum)">Acero tribolo <em>(Acer tataricum)</em></option>
+                        <option value="Ailanto (Ailanthus altissima)">Ailanto <em>(Ailanthus altissima)</em></option>
+                        <option value="Betulla (Betula pendula)">Betulla <em>(Betula pendula)</em></option>
+                        <option value="Carpino bianco (Carpinus betulus)">Carpino bianco <em>(Carpinus betulus)</em></option>
+                        <option value="Carpino nero (Ostrya carpinifolia)">Carpino nero <em>(Ostrya carpinifolia)</em></option>
+                        <option value="Castagno (Castanea sativa)">Castagno <em>(Castanea sativa)</em></option>
+                        <option value="Cedro dell'Atlante (Cedrus atlantica)">Cedro dell'Atlante <em>(Cedrus atlantica)</em></option>
+                        <option value="Cedro deodara (Cedrus deodara)">Cedro deodara <em>(Cedrus deodara)</em></option>
+                        <option value="Cedro del Libano (Cedrus libani)">Cedro del Libano <em>(Cedrus libani)</em></option>
+                        <option value="Cerro (Quercus cerris)">Cerro <em>(Quercus cerris)</em></option>
+                        <option value="Chamaecyparis (Chamaecyparis sp)">Chamaecyparis <em>(Chamaecyparis sp)</em></option>
+                        <option value="Ciavardello (Quercus robur)">Ciavardello <em>(Quercus robur)</em></option>
+                        <option value="Ciliegio (Prunus avium)">Ciliegio <em>(Prunus avium)</em></option>
+                        <option value="Cipresso comune (Cupressus sempervirens)">Cipresso comune <em>(Cupressus sempervirens)</em></option>
+                        <option value="Cipresso dell'Arizona (Cupressus arizonica)">Cipresso dell'Arizona <em>(Cupressus arizonica)</em></option>
+                        <option value="Cipresso di Monterey (Cupressus macrocarpa)">Cipresso di Monterey <em>(Cupressus macrocarpa)</em></option>
+                        <option value="Corbezzolo (Arbutus unedo)">Corbezzolo <em>(Arbutus unedo)</em></option>
+                        <option value="Douglasia (Pseudotsuga menziesii)">Douglasia <em>(Pseudotsuga menziesii)</em></option>
+                        <option value="Faggio (Fagus sylvatica)">Faggio <em>(Fagus sylvatica)</em></option>
+                        <option value="Farnetto (Fraxinus ornus)">Farnetto <em>(Fraxinus ornus)</em></option>
+                        <option value="Farnia (Fraxinus excelsior)">Farnia <em>(Fraxinus excelsior)</em></option>
+                        <option value="Frassino maggiore (Fraxinus angustifolia)">Frassino maggiore <em>(Fraxinus angustifolia)</em></option>
+                        <option value="Frassino ossifillo (Fraxinus oxycarpa)">Frassino ossifillo <em>(Fraxinus oxycarpa)</em></option>
+                        <option value="Ippocastano (Aesculus hippocastanum)">Ippocastano <em>(Aesculus hippocastanum)</em></option>
+                        <option value="Leccio (Quercus ilex)">Leccio <em>(Quercus ilex)</em></option>
+                        <option value="Nocciolo (Corylus avellana)">Nocciolo <em>(Corylus avellana)</em></option>
+                        <option value="Noce (Juglans regia)">Noce <em>(Juglans regia)</em></option>
+                        <option value="Ontano bianco (Alnus incana)">Ontano bianco <em>(Alnus incana)</em></option>
+                        <option value="Ontano napoletano (Alnus cordata)">Ontano napoletano <em>(Alnus cordata)</em></option>
+                        <option value="Ontano nero (Alnus glutinosa)">Ontano nero <em>(Alnus glutinosa)</em></option>
+                        <option value="Orniello (Fraxinus ornus)">Orniello <em>(Fraxinus ornus)</em></option>
+                        <option value="Pino d'Aleppo (Pinus halepensis)">Pino d'Aleppo <em>(Pinus halepensis)</em></option>
+                        <option value="Pino domestico (Pinus pinea)">Pino domestico <em>(Pinus pinea)</em></option>
+                        <option value="Pino insigne (Pinus radiata)">Pino insigne <em>(Pinus radiata)</em></option>
+                        <option value="Pino loricato (Pinus heldreichii)">Pino loricato <em>(Pinus heldreichii)</em></option>
+                        <option value="Pino marittimo (Pinus pinaster)">Pino marittimo <em>(Pinus pinaster)</em></option>
+                        <option value="Pino nero (Pinus nigra)">Pino nero <em>(Pinus nigra)</em></option>
+                        <option value="Pino silvestre (Pinus sylvestris)">Pino silvestre <em>(Pinus sylvestris)</em></option>
+                        <option value="Pioppo bianco (Populus alba)">Pioppo bianco <em>(Populus alba)</em></option>
+                        <option value="Pioppo cinerino (Populus cinerea)">Pioppo cinerino <em>(Populus cinerea)</em></option>
+                        <option value="Pioppo nero (Populus nigra)">Pioppo nero <em>(Populus nigra)</em></option>
+                        <option value="Pioppo tremulo (Populus tremula)">Pioppo tremulo <em>(Populus tremula)</em></option>
+                        <option value="Robinia (Robinia pseudoacacia)">Robinia <em>(Robinia pseudoacacia)</em></option>
+                        <option value="Rovere (Quercus robur)">Rovere <em>(Quercus robur)</em></option>
+                        <option value="Roverella (Quercus petraea)">Roverella <em>(Quercus petraea)</em></option>
+                        <option value="Salice (Salix spp)">Salice <em>(Salix spp)</em></option>
+                        <option value="Sorbo degli uccellatori (Sorbus aucuparia)">Sorbo degli uccellatori <em>(Sorbus aucuparia)</em></option>
+                        <option value="Sorbo domestico (Sorbus domestica)">Sorbo domestico <em>(Sorbus domestica)</em></option>
+                        <option value="Sughera (Quercus suber)">Sughera <em>(Quercus suber)</em></option>
+                        <option value="Tasso (Taxus baccata)">Tasso <em>(Taxus baccata)</em></option>
+                        <option value="Thuja (Thuja occidentalis)">Thuja <em>(Thuja occidentalis)</em></option>
+                        <option value="Tiglio (Tilia cordata)">Tiglio <em>(Tilia cordata)</em></option>
+                    </select>
+                </td>
                 <td><input type="number" step="1" max="99" class="no-spinner"></td>
                 <td><input type="number" step="1" max="999" class="no-spinner"></td>
                 <td><input type="number" step="1" max="999" class="no-spinner"></td>
+                <td><input type="number" step="0.01" max="9999.99"></td>
                 <td><input type="number" step="0.01"></td>
-                <td><input type="number" step="0.01"></td>
+                <td><button type="button" class="delete-row-btn" onclick="deleteSpeciesRow(this)">🗑️</button></td>
             `;
         });
+
+        // Funzionalità per aggiungere righe intervento
+        document.getElementById('add-intervention').addEventListener('click', function() {
+            const tbody = document.querySelector('.intervention-table tbody');
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td>
+                    <select>
+                        <option value="">Seleziona intervento...</option>
+                        <option value="Conversione a ceduo">Conversione a ceduo</option>
+                        <option value="Diradamento dal basso">Diradamento dal basso</option>
+                        <option value="Diradamento del ceduo">Diradamento del ceduo</option>
+                        <option value="Diradamento geometrico">Diradamento geometrico</option>
+                        <option value="Diradamento selettivo">Diradamento selettivo</option>
+                        <option value="Manutenzione attorno manufatto">Manutenzione attorno manufatto</option>
+                        <option value="Manutenzione idraulica">Manutenzione idraulica</option>
+                        <option value="Manutenzione lungo viabilità">Manutenzione lungo viabilità</option>
+                        <option value="Recupero dell'uso agricolo storico del suolo">Recupero dell'uso agricolo storico del suolo</option>
+                        <option value="Sfollo e spalcatura">Sfollo e spalcatura</option>
+                        <option value="Sostituzione di specie">Sostituzione di specie</option>
+                        <option value="Taglio a scelta">Taglio a scelta</option>
+                        <option value="Taglio della fustaia su ceduo">Taglio della fustaia su ceduo</option>
+                        <option value="Taglio del ceduo a sterzo">Taglio del ceduo a sterzo</option>
+                        <option value="Taglio del ceduo composto">Taglio del ceduo composto</option>
+                        <option value="Taglio del ceduo coniferato">Taglio del ceduo coniferato</option>
+                        <option value="Taglio del ceduo intensamente matricinato">Taglio del ceduo intensamente matricinato</option>
+                        <option value="Taglio del ceduo semplice con rilascio di matricine">Taglio del ceduo semplice con rilascio di matricine</option>
+                        <option value="Taglio di avviamento all'alto fusto">Taglio di avviamento all'alto fusto</option>
+                        <option value="Taglio raso della fustaia con rimboschimento artificiale">Taglio raso della fustaia con rimboschimento artificiale</option>
+                        <option value="Taglio saltuario">Taglio saltuario</option>
+                        <option value="Trasformazione da terreno saldo a periodica lavorazione">Trasformazione da terreno saldo a periodica lavorazione</option>
+                        <option value="Altro: dettagliato in descrizione">Altro: dettagliato in descrizione</option>
+                    </select>
+                </td>
+                <td><input type="number" step="0.0001" max="999.9999"></td>
+                <td><input type="number" min="1900" max="2050"></td>
+                <td><input type="number"></td>
+                <td><input type="number" step="0.01" max="9999.99"></td>
+                <td><input type="number" step="0.01" max="9999.99"></td>
+                <td><button type="button" class="delete-row-btn" onclick="deleteInterventionRow(this)">🗑️</button></td>
+            `;
+        });
+
+        // Funzione per eliminare righe specie
+        function deleteSpeciesRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+
+        // Funzione per eliminare righe intervento
+        function deleteInterventionRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+
+        // Funzionalità per aggiungere particelle catastali
+        document.getElementById('add-cadastral').addEventListener('click', function() {
+            const leftTbody = document.getElementById('cadastral-left-tbody');
+            const rightTbody = document.getElementById('cadastral-right-tbody');
+            const leftRowCount = leftTbody.children.length;
+            const rightRowCount = rightTbody.children.length;
+            const totalRows = leftRowCount + rightRowCount;
+
+            let targetTbody;
+            let showDeleteBtn = false;
+
+            // Logic for row distribution:
+            // Rows 1-4: Left column
+            // Rows 5-8: Right column
+            // Row 9: Move 5th from right to left (left=5, right=4), add 9th to right (left=5, right=5)
+            // Row 10: Add to right (left=5, right=6)
+            // Row 11: Move 6th from right to left (left=6, right=5), add 11th to right (left=6, right=6)
+            // Pattern: When adding odd-numbered rows ≥9, move one from right to left first
+
+            if (totalRows >= 8 && (totalRows + 1) % 2 === 1) {
+                // For 9th, 11th, 13th... rows: move one row from right to left first
+                if (rightRowCount > 4) {
+                    const rowToMove = rightTbody.children[0]; // Move the first row from right
+                    leftTbody.appendChild(rowToMove);
+                }
+            }
+
+            // Determine where to add the new row
+            const updatedLeftCount = leftTbody.children.length;
+            const updatedRightCount = rightTbody.children.length;
+
+            if (updatedLeftCount < 4) {
+                targetTbody = leftTbody;
+                showDeleteBtn = totalRows >= 1; // Show delete button for 2nd row and beyond
+            } else {
+                targetTbody = rightTbody;
+                showDeleteBtn = true;
+            }
+
+            const newRow = targetTbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="number" step="0.01"></td>
+                ${showDeleteBtn ? '<td><button type="button" class="delete-row-btn" onclick="deleteCadastralRow(this)">🗑️</button></td>' : '<td></td>'}
+            `;
+        });
+
+        // Funzione per eliminare righe catastali
+        function deleteCadastralRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
 
         // Salvataggio dati nel localStorage
         document.getElementById('save-btn').addEventListener('click', function() {
