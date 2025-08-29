@@ -10,10 +10,12 @@
 
 body {
     font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic', sans-serif;
-    line-height: 1.6;
+    line-height: 1.4;
     color: #333;
     background-color: #f5f5f5;
-    font-size: 14px;
+    font-size: 12px;
+    margin: 0;
+    padding: 20px;
 }
 
 /* ==================================================
@@ -25,11 +27,12 @@ body {
     max-width: 210mm;
     min-height: 297mm; /* A4 height */
     margin: 0 auto;
-    padding: 15mm; /* A4 margins */
+    padding: 12mm; /* Reduced A4 margins for more content */
     background-color: white;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     border-radius: 0;
     box-sizing: border-box;
+    page-break-inside: avoid;
 }
 
 .hidden {
@@ -43,8 +46,8 @@ body {
 .form-header {
     background-color: #8FBC8F;
     color: white;
-    padding: 10px 15px;
-    margin: -15mm -15mm 15px -15mm;
+    padding: 8px 12px;
+    margin: -12mm -12mm 10px -12mm;
     border-radius: 0;
     display: flex;
     justify-content: space-between;
@@ -80,7 +83,7 @@ body {
    ================================================== */
 
 .form-section {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     overflow: hidden;
@@ -91,9 +94,10 @@ body {
 .section-header {
     background-color: #8FBC8F;
     color: white;
-    padding: 10px 15px;
+    padding: 8px 12px;
     font-weight: bold;
-    font-size: 0.95em;
+    font-size: 12px;
+    margin: 0;
 }
 
 .form-section > .section-header:not(:first-child) {
@@ -113,8 +117,8 @@ body {
 .dual-column {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 12px;
+    gap: 12px;
+    padding: 10px;
     align-items: start;
 }
 
@@ -122,13 +126,13 @@ body {
 .right-column {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 8px;
 }
 
 .row {
     display: flex;
-    gap: 12px;
-    padding: 12px;
+    gap: 10px;
+    padding: 8px;
     flex-wrap: wrap;
     align-items: flex-end;
 }
@@ -138,6 +142,67 @@ body {
     min-width: fit-content;
 }
 
+/* LAYOUT SPECIALE PER INQUADRAMENTO GENERALE */
+.inquadramento-layout {
+    display: flex;
+    gap: 40px;
+    padding: 12px;
+    align-items: flex-start;
+}
+
+.inquadramento-left,
+.inquadramento-right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inquadramento-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.inquadramento-left .inquadramento-row label {
+    font-weight: bold;
+    color: #2E5D2E;
+    font-size: 12px;
+    width: 150px;
+    min-width: 150px;
+    text-align: left;
+}
+
+.inquadramento-right .inquadramento-row label {
+    font-weight: bold;
+    color: #2E5D2E;
+    font-size: 12px;
+    width: 180px;
+    min-width: 180px;
+    text-align: left;
+}
+
+.inquadramento-row input {
+    width: 120px !important;
+    max-width: 120px !important;
+    min-width: 120px !important;
+    flex: none !important;
+    box-sizing: border-box;
+}
+
+.inquadramento-row input[name="particella"],
+.inquadramento-row input[name="sottoparticella"] {
+    width: 80px !important;
+    max-width: 80px !important;
+    min-width: 80px !important;
+}
+
+.inquadramento-row input[name="localita"] {
+    width: 300px !important;
+    max-width: 300px !important;
+    min-width: 300px !important;
+}
+
 /* ==================================================
    GRUPPI DI CAMPI
    ================================================== */
@@ -145,19 +210,21 @@ body {
 .field-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 3px;
+    margin-bottom: 8px;
 }
 
 .field-group.full-width {
     width: 100%;
-    padding: 15px;
+    padding: 12px;
 }
 
 .field-group label {
     font-weight: bold;
     color: #2E5D2E;
-    font-size: 0.9em;
+    font-size: 12px;
     white-space: nowrap;
+    margin-bottom: 2px;
 }
 
 /* ==================================================
@@ -343,6 +410,22 @@ input[type="number"] {
     font-size: 14px;
 }
 
+/* INPUT CON PULSANTE ELIMINA */
+.input-with-delete {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-with-delete input {
+    flex: 1;
+}
+
+.input-with-delete select {
+    width: 250px;
+    max-width: 250px;
+}
+
 /* ==================================================
    CHECKBOX STYLING
    ================================================== */
@@ -513,6 +596,10 @@ table td input:focus {
 
 .add-row-btn:hover {
     background-color: #6B8E6B;
+}
+
+.add-infrastruttura-btn {
+    width: 200px;
 }
 
 .delete-row-btn {

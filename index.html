@@ -159,38 +159,40 @@
         <form id="forestry-form">
             <!-- Sezione identificazione particella -->
             <section class="form-section">
-                <div class="row">
-                    <div class="field-group">
-                        <label for="particella">Particella (PF) n.</label>
-                        <input type="text" id="particella" name="particella" maxlength="3">
+                <div class="section-header">Inquadramento generale</div>
+                <div class="inquadramento-layout">
+                    <div class="inquadramento-left">
+                        <div class="inquadramento-row">
+                            <label for="particella">Particella (PF) n.</label>
+                            <input type="text" id="particella" name="particella" maxlength="3">
+                        </div>
+                        <div class="inquadramento-row">
+                            <label for="sottoparticella">Sottoparticella (SPF) n.</label>
+                            <input type="text" id="sottoparticella" name="sottoparticella" maxlength="2">
+                        </div>
+                        <div class="inquadramento-row">
+                            <label for="localita">Località</label>
+                            <input type="text" id="localita" name="localita">
+                        </div>
                     </div>
-                    <div class="field-group">
-                        <label for="sottoparticella">Sottoparticella (SPF) n.</label>
-                        <input type="text" id="sottoparticella" name="sottoparticella" maxlength="2">
-                    </div>
-                    <div class="field-group">
-                        <label for="localita">Località</label>
-                        <input type="text" id="localita" name="localita">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="field-group">
-                        <label for="superficie-particella">Superficie particella (ha)</label>
-                        <input type="number" step="0.0001" max="999.9999" id="superficie-particella" name="superficie-particella">
-                    </div>
-                    <div class="field-group">
-                        <label for="superficie-sottoparticella">Superficie sottoparticella (ha)</label>
-                        <input type="number" step="0.0001" max="999.9999" id="superficie-sottoparticella" name="superficie-sottoparticella">
+                    <div class="inquadramento-right">
+                        <div class="inquadramento-row">
+                            <label for="superficie-particella">Superficie particella (ha)</label>
+                            <input type="number" step="0.0001" max="999.9999" id="superficie-particella" name="superficie-particella">
+                        </div>
+                        <div class="inquadramento-row">
+                            <label for="superficie-sottoparticella">Superficie sottoparticella (ha)</label>
+                            <input type="number" step="0.0001" max="999.9999" id="superficie-sottoparticella" name="superficie-sottoparticella">
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- Caratteristiche stazionali e infrastrutture -->
             <section class="form-section">
-                <div class="section-header">Caratteristiche stazionali</div>
-                <div class="section-header">Infrastrutture forestali</div>
                 <div class="dual-column">
                     <div class="left-column">
+                        <div class="section-header">Caratteristiche stazionali</div>
                         <div class="field-group">
                             <label for="esposizione">Esposizione</label>
                             <select id="esposizione" name="esposizione">
@@ -216,13 +218,39 @@
                                 <span class="unit">%</span>
                             </div>
                         </div>
+                        <div class="field-group">
+                            <label for="fertilita">Fertilità della stazione</label>
+                            <select id="fertilita" name="fertilita">
+                                <option value="">Seleziona...</option>
+                                <option value="Scarsa">Scarsa</option>
+                                <option value="Bassa">Bassa</option>
+                                <option value="Media">Media</option>
+                                <option value="Alta">Alta</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="right-column">
-                        <div class="field-group">
-                            <label for="viabilita">Viabilità e imposti</label>
-                            <input type="text" id="viabilita" name="viabilita">
+                        <div class="section-header">Infrastrutture forestali</div>
+                        <div class="infrastructure-container">
+                            <div class="field-group">
+                                <label for="viabilita">Viabilità e imposti</label>
+                                <div class="input-with-delete">
+                                    <select id="viabilita" name="viabilita">
+                                        <option value="">Seleziona...</option>
+                                        <option value="Strada camionabile principale">Strada camionabile principale</option>
+                                        <option value="Strada camionabile secondaria">Strada camionabile secondaria</option>
+                                        <option value="Strada trattorabile">Strada trattorabile</option>
+                                        <option value="Pista camionabile">Pista camionabile</option>
+                                        <option value="Pista principale per trattori">Pista principale per trattori</option>
+                                        <option value="Pista secondaria per trattori">Pista secondaria per trattori</option>
+                                        <option value="Linee di esbosco">Linee di esbosco</option>
+                                        <option value="Imposto permanente">Imposto permanente</option>
+                                        <option value="Imposto temporaneo">Imposto temporaneo</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <button type="button" id="add-infrastruttura-btn" class="add-row-btn">+ Aggiungi infrastruttura</button>
+                        <button type="button" id="add-infrastruttura-btn" class="add-row-btn add-infrastruttura-btn">+ Aggiungi infrastruttura</button>
                     </div>
                 </div>
             </section>
@@ -431,16 +459,6 @@
                             <input type="number" step="1" max="100" id="copertura" name="copertura">
                             <span class="unit">%</span>
                         </div>
-                    </div>
-                    <div class="field-group">
-                        <label for="fertilita">Fertilità della stazione</label>
-                        <select id="fertilita" name="fertilita">
-                            <option value="">Seleziona...</option>
-                            <option value="Scarsa">Scarsa</option>
-                            <option value="Bassa">Bassa</option>
-                            <option value="Media">Media</option>
-                            <option value="Alta">Alta</option>
-                        </select>
                     </div>
                 </div>
 
@@ -1022,6 +1040,37 @@
                         console.log('ServiceWorker registrazione fallita: ', err);
                     });
             });
+        }
+
+        // Funzionalità per aggiungere infrastrutture
+        document.getElementById('add-infrastruttura-btn').addEventListener('click', function() {
+            const container = document.querySelector('.infrastructure-container');
+            const newFieldGroup = document.createElement('div');
+            newFieldGroup.className = 'field-group';
+            newFieldGroup.innerHTML = `
+                <div class="input-with-delete">
+                    <select name="viabilita-extra">
+                        <option value="">Seleziona...</option>
+                        <option value="Strada camionabile principale">Strada camionabile principale</option>
+                        <option value="Strada camionabile secondaria">Strada camionabile secondaria</option>
+                        <option value="Strada trattorabile">Strada trattorabile</option>
+                        <option value="Pista camionabile">Pista camionabile</option>
+                        <option value="Pista principale per trattori">Pista principale per trattori</option>
+                        <option value="Pista secondaria per trattori">Pista secondaria per trattori</option>
+                        <option value="Linee di esbosco">Linee di esbosco</option>
+                        <option value="Imposto permanente">Imposto permanente</option>
+                        <option value="Imposto temporaneo">Imposto temporaneo</option>
+                    </select>
+                    <button type="button" class="delete-row-btn" onclick="deleteInfrastructureRow(this)" title="Elimina">🗑️</button>
+                </div>
+            `;
+            container.appendChild(newFieldGroup);
+        });
+
+        // Funzione per eliminare righe infrastruttura
+        function deleteInfrastructureRow(button) {
+            const fieldGroup = button.closest('.field-group');
+            fieldGroup.remove();
         }
 
         // Funzionalità per aggiungere righe specie
