@@ -143,16 +143,80 @@ body {
 }
 
 /* LAYOUT SPECIALE PER INQUADRAMENTO GENERALE */
+/* LAYOUT A DUE COLONNE PER INQUADRAMENTO E CARATTERISTICHE */
+.two-column-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 0;
+}
+
+.form-section:has(.two-column-layout) {
+    border: none;
+    margin-bottom: 10px;
+    background: transparent;
+}
+
+.inquadramento-box,
+.caratteristiche-box {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
 .inquadramento-layout {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, auto);
-    gap: 8px 20px;
+    gap: 8px 10px;
     padding: 12px;
     grid-template-areas: 
         "particella superficie-particella"
         "sottoparticella superficie-sottoparticella"  
         "localita localita";
+}
+
+.caratteristiche-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 8px;
+    padding: 12px;
+    grid-template-areas: 
+        "esposizione altitudine"
+        "pendenza fertilita";
+}
+
+.caratteristiche-layout .field-group:nth-child(1) { grid-area: esposizione; }
+.caratteristiche-layout .field-group:nth-child(2) { grid-area: altitudine; }
+.caratteristiche-layout .field-group:nth-child(3) { grid-area: pendenza; }
+.caratteristiche-layout .field-group:nth-child(4) { grid-area: fertilita; }
+
+/* LAYOUT INFRASTRUTTURE A TRE COLONNE */
+.infrastructure-container {
+    display: flex;
+    gap: 8px;
+    padding: 15px;
+    align-items: flex-start;
+}
+
+.infrastructure-column {
+    flex: 1;
+}
+
+.infrastructure-column:first-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.infrastructure-column:not(:first-child) {
+    margin-top: 21px; /* Align with input field level, not label level */
+}
+
+.infrastructure-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .inquadramento-left {
@@ -166,7 +230,7 @@ body {
 .inquadramento-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 2px;
 }
 
 .inquadramento-row:nth-child(1) { grid-area: particella; }
@@ -180,36 +244,42 @@ body {
     color: #2E5D2E;
     font-size: 12px;
     white-space: nowrap;
-    min-width: 120px;
-    text-align: left;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
 }
 
 .inquadramento-row input {
     flex: none;
     box-sizing: border-box;
+    margin: 0;
+    padding: 2px 3px;
 }
 
 .inquadramento-row input[name="particella"],
 .inquadramento-row input[name="sottoparticella"] {
-    width: 20px;
-    max-width: 20px;
-    min-width: 20px;
-    height: 20px;
-    padding: 2px 3px;
-    font-size: 11px;
+    width: 20px !important;
+    max-width: 20px !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    padding: 2px 1px !important;
+    font-size: 11px !important;
+    margin: 0 !important;
 }
 
 .inquadramento-row input[name="superficie-particella"],
-.inquadramento-row input[name="superficie-sotto"] {
-    width: 120px;
-    max-width: 120px;
-    min-width: 120px;
+.inquadramento-row input[name="superficie-sottoparticella"] {
+    width: 65px;
+    max-width: 65px;
+    min-width: 65px;
 }
 
 .inquadramento-row input[name="localita"] {
-    width: 400px;
-    max-width: 600px;
-    min-width: 300px;
+    width: calc(100% - 40px) !important;
+    max-width: calc(100% - 40px) !important;
+    min-width: 150px !important;
+    margin: 0 !important;
+    padding: 2px 6px !important;
 }
 
 /* ==================================================
@@ -307,25 +377,33 @@ input[type="number"] {
 
 /* Campi identificazione particella */
 #particella {
-    width: 85px;
-    max-width: 85px;
+    width: 30px !important;
+    max-width: 30px !important;
+    height: 20px !important;
+    padding: 2px 1px !important;
+    font-size: 11px !important;
+    margin: 0 !important;
 }
 
 #sottoparticella {
-    width: 65px;
-    max-width: 65px;
+    width: 30px !important;
+    max-width: 30px !important;
+    height: 20px !important;
+    padding: 2px 1px !important;
+    font-size: 11px !important;
+    margin: 0 !important;
 }
 
 #superficie-particella, 
 #superficie-sottoparticella {
-    width: 130px;
-    max-width: 130px;
+    width: 65px;
+    max-width: 65px;
 }
 
 /* Campi caratteristiche stazionali */
 #altitudine {
-    width: 95px;
-    max-width: 95px;
+    width: 63px;
+    max-width: 63px;
 }
 
 #esposizione {
@@ -335,34 +413,34 @@ input[type="number"] {
 
 /* Campi caratterizzazione particella */
 #forma-governo {
-    width: 140px;
-    max-width: 140px;
+    width: 110px;
+    max-width: 110px;
 }
 
 #grado-evolutivo {
-    width: 180px;
-    max-width: 180px;
+    width: 140px;
+    max-width: 140px;
 }
 
 #composizione {
-    width: 140px;
-    max-width: 140px;
+    width: 100px;
+    max-width: 100px;
 }
 
 #tipo-colturale {
-    width: 240px;
-    max-width: 240px;
+    width: 210px;
+    max-width: 210px;
 }
 
 #destinazione {
-    width: 140px;
-    max-width: 140px;
+    width: 110px;
+    max-width: 110px;
 }
 
 #tipo-forestale {
-    width: 100%;
-    max-width: 100%;
-    min-width: 250px;
+    width: 500px;
+    max-width: 500px;
+    min-width: 500px;
 }
 
 /* Campi descrizione soprassuolo */
@@ -433,7 +511,7 @@ input[type="number"] {
 .input-with-delete {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 3px;
 }
 
 .input-with-delete input {
@@ -441,8 +519,8 @@ input[type="number"] {
 }
 
 .input-with-delete select {
-    width: 250px;
-    max-width: 250px;
+    width: 200px;
+    max-width: 200px;
 }
 
 /* ==================================================
@@ -618,18 +696,25 @@ table td input:focus {
 }
 
 .add-infrastruttura-btn {
-    width: 200px;
+    width: 150px;
+    margin: 10px 15px;
+    font-size: 10px;
 }
 
 .delete-row-btn {
     background-color: #dc3545;
     color: white;
     border: none;
-    padding: 5px 8px;
+    padding: 3px 5px;
     border-radius: 3px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 8px;
     transition: background-color 0.3s ease;
+    width: 20px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .delete-row-btn:hover {
@@ -1380,9 +1465,9 @@ table td input:focus {
     }
     
     /* Riduci larghezze su mobile mantenendo proporzioni */
-    #particella { width: 60px; max-width: 60px; }
-    #sottoparticella { width: 45px; max-width: 45px; }
-    #superficie-particella, #superficie-sottoparticella { width: 100px; max-width: 100px; }
+    #particella { width: 30px; max-width: 30px; }
+    #sottoparticella { width: 30px; max-width: 30px; }
+    #superficie-particella, #superficie-sottoparticella { width: 65px; max-width: 65px; }
     #altitudine { width: 70px; max-width: 70px; }
     #esposizione { width: 60px; max-width: 60px; }
 }

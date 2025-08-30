@@ -157,81 +157,88 @@
         </header>
 
         <form id="forestry-form">
-            <!-- Sezione identificazione particella -->
+            <!-- Sezione identificazione particella e caratteristiche stazionali -->
             <section class="form-section">
-                <div class="section-header">Inquadramento generale</div>
-                <div class="inquadramento-layout">
-                    <div class="inquadramento-left">
-                        <div class="inquadramento-row">
-                            <label for="particella">Particella (PF) n.</label>
-                            <input type="text" id="particella" name="particella" maxlength="3">
-                        </div>
-                        <div class="inquadramento-row">
-                            <label for="sottoparticella">Sottoparticella (SPF) n.</label>
-                            <input type="text" id="sottoparticella" name="sottoparticella" maxlength="2">
-                        </div>
-                        <div class="inquadramento-row">
-                            <label for="localita">Località</label>
-                            <input type="text" id="localita" name="localita">
+                <div class="two-column-layout">
+                    <div class="inquadramento-box">
+                        <div class="section-header">Inquadramento generale</div>
+                        <div class="inquadramento-layout">
+                            <div class="inquadramento-left">
+                                <div class="inquadramento-row">
+                                    <label for="particella">Particella (PF) n.</label>
+                                    <input type="text" id="particella" name="particella" maxlength="3">
+                                </div>
+                                <div class="inquadramento-row">
+                                    <label for="sottoparticella">Sottoparticella (SPF) n.</label>
+                                    <input type="text" id="sottoparticella" name="sottoparticella" maxlength="2">
+                                </div>
+                                <div class="inquadramento-row">
+                                    <label for="localita">Località</label>
+                                    <input type="text" id="localita" name="localita">
+                                </div>
+                            </div>
+                            <div class="inquadramento-right">
+                                <div class="inquadramento-row">
+                                    <label for="superficie-particella">Superficie particella (ha)</label>
+                                    <input type="number" step="0.0001" max="999.9999" id="superficie-particella" name="superficie-particella">
+                                </div>
+                                <div class="inquadramento-row">
+                                    <label for="superficie-sottoparticella">Superficie sottoparticella (ha)</label>
+                                    <input type="number" step="0.0001" max="999.9999" id="superficie-sottoparticella" name="superficie-sottoparticella">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="inquadramento-right">
-                        <div class="inquadramento-row">
-                            <label for="superficie-particella">Superficie particella (ha)</label>
-                            <input type="number" step="0.0001" max="999.9999" id="superficie-particella" name="superficie-particella">
-                        </div>
-                        <div class="inquadramento-row">
-                            <label for="superficie-sottoparticella">Superficie sottoparticella (ha)</label>
-                            <input type="number" step="0.0001" max="999.9999" id="superficie-sottoparticella" name="superficie-sottoparticella">
+                    
+                    <div class="caratteristiche-box">
+                        <div class="section-header">Caratteristiche stazionali</div>
+                        <div class="caratteristiche-layout">
+                            <div class="field-group">
+                                <label for="esposizione">Esposizione</label>
+                                <select id="esposizione" name="esposizione">
+                                    <option value="">Seleziona...</option>
+                                    <option value="N">N</option>
+                                    <option value="NE">NE</option>
+                                    <option value="E">E</option>
+                                    <option value="SE">SE</option>
+                                    <option value="S">S</option>
+                                    <option value="SW">SW</option>
+                                    <option value="W">W</option>
+                                    <option value="NW">NW</option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label for="altitudine">Altitudine (m)</label>
+                                <input type="number" id="altitudine" name="altitudine" max="9999" step="1">
+                            </div>
+                            <div class="field-group">
+                                <label for="pendenza">Pendenza (%)</label>
+                                <div class="input-with-unit">
+                                    <input type="number" step="1" max="99" id="pendenza" name="pendenza">
+                                    <span class="unit">%</span>
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <label for="fertilita">Fertilità</label>
+                                <select id="fertilita" name="fertilita">
+                                    <option value="">Seleziona...</option>
+                                    <option value="Scarsa">Scarsa</option>
+                                    <option value="Bassa">Bassa</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Alta">Alta</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Caratteristiche stazionali e infrastrutture -->
+            <!-- Infrastrutture -->
             <section class="form-section">
-                <div class="dual-column">
-                    <div class="left-column">
-                        <div class="section-header">Caratteristiche stazionali</div>
-                        <div class="field-group">
-                            <label for="esposizione">Esposizione</label>
-                            <select id="esposizione" name="esposizione">
-                                <option value="">Seleziona...</option>
-                                <option value="N">N</option>
-                                <option value="NE">NE</option>
-                                <option value="E">E</option>
-                                <option value="SE">SE</option>
-                                <option value="S">S</option>
-                                <option value="SW">SW</option>
-                                <option value="W">W</option>
-                                <option value="NW">NW</option>
-                            </select>
-                        </div>
-                        <div class="field-group">
-                            <label for="altitudine">Altitudine (m)</label>
-                            <input type="number" id="altitudine" name="altitudine" max="9999" step="1">
-                        </div>
-                        <div class="field-group">
-                            <label for="pendenza">Pendenza (%)</label>
-                            <div class="input-with-unit">
-                                <input type="number" step="1" max="99" id="pendenza" name="pendenza">
-                                <span class="unit">%</span>
-                            </div>
-                        </div>
-                        <div class="field-group">
-                            <label for="fertilita">Fertilità della stazione</label>
-                            <select id="fertilita" name="fertilita">
-                                <option value="">Seleziona...</option>
-                                <option value="Scarsa">Scarsa</option>
-                                <option value="Bassa">Bassa</option>
-                                <option value="Media">Media</option>
-                                <option value="Alta">Alta</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="right-column">
-                        <div class="section-header">Infrastrutture forestali</div>
-                        <div class="infrastructure-container">
+                <div class="section-header">Infrastrutture forestali</div>
+                <div class="infrastructure-container">
+                    <div class="infrastructure-column">
+                        <div class="infrastructure-items" id="infra-col-1">
                             <div class="field-group">
                                 <label for="viabilita">Viabilità e imposti</label>
                                 <div class="input-with-delete">
@@ -250,16 +257,22 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" id="add-infrastruttura-btn" class="add-row-btn add-infrastruttura-btn">+ Aggiungi infrastruttura</button>
+                    </div>
+                    <div class="infrastructure-column">
+                        <div class="infrastructure-items" id="infra-col-2"></div>
+                    </div>
+                    <div class="infrastructure-column">
+                        <div class="infrastructure-items" id="infra-col-3"></div>
                     </div>
                 </div>
+                <button type="button" id="add-infrastruttura-btn" class="add-row-btn add-infrastruttura-btn">+ Aggiungi infrastruttura</button>
             </section>
 
             <!-- Caratterizzazione della particella -->
             <section class="form-section">
                 <div class="section-header">Caratterizzazione della particella</div>
-                <div class="dual-column">
-                    <div class="left-column">
+                <div class="caratterizzazione-layout">
+                    <div class="caratterizzazione-row-1">
                         <div class="field-group">
                             <label for="forma-governo">Forma di governo</label>
                             <select id="forma-governo" name="forma-governo">
@@ -279,12 +292,6 @@
                                 <option value="Misto">Misto</option>
                             </select>
                         </div>
-                        <div class="field-group">
-                            <label for="compresa-forestale">Compresa forestale</label>
-                            <input type="text" id="compresa-forestale" name="compresa-forestale">
-                        </div>
-                    </div>
-                    <div class="right-column">
                         <div class="field-group">
                             <label for="grado-evolutivo">Grado evolutivo</label>
                             <select id="grado-evolutivo" name="grado-evolutivo">
@@ -316,6 +323,8 @@
                                 <option value="Fustaia su ceduo">Fustaia su ceduo</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="caratterizzazione-row-2">
                         <div class="field-group">
                             <label for="destinazione">Destinazione</label>
                             <select id="destinazione" name="destinazione">
@@ -326,11 +335,9 @@
                                 <option value="Scientifica">Scientifica</option>
                             </select>
                         </div>
-                    </div>
-                </div>
-                <div class="field-group full-width">
-                    <label for="tipo-forestale">Tipo forestale</label>
-                    <select id="tipo-forestale" name="tipo-forestale">
+                        <div class="field-group">
+                            <label for="tipo-forestale">Tipo forestale</label>
+                            <select id="tipo-forestale" name="tipo-forestale">
                         <option value="">Seleziona...</option>
                         <option value="1.1. Lecceta tipica a Viburnum tinus">1.1. Lecceta tipica a Viburnum tinus</option>
                         <option value="1.2. Lecceta di transizione a boschi di caducifoglie">1.2. Lecceta di transizione a boschi di caducifoglie</option>
@@ -432,6 +439,14 @@
                         <option value="23.10. Pino eccelso">23.10. Pino eccelso</option>
                         <option value="23.11. Eucalipti">23.11. Eucalipti</option>
                     </select>
+                        </div>
+                    </div>
+                    <div class="caratterizzazione-row-3">
+                        <div class="field-group">
+                            <label for="compresa-forestale">Compresa forestale</label>
+                            <input type="text" id="compresa-forestale" name="compresa-forestale">
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -1044,7 +1059,35 @@
 
         // Funzionalità per aggiungere infrastrutture
         document.getElementById('add-infrastruttura-btn').addEventListener('click', function() {
-            const container = document.querySelector('.infrastructure-container');
+            const col1 = document.getElementById('infra-col-1');
+            const col2 = document.getElementById('infra-col-2');
+            const col3 = document.getElementById('infra-col-3');
+            const col1Count = col1.children.length;
+            const col2Count = col2.children.length;
+            const col3Count = col3.children.length;
+            const totalItems = col1Count + col2Count + col3Count;
+
+            // Limit to 6 items maximum
+            if (totalItems >= 6) {
+                alert('Massimo 6 infrastrutture consentite');
+                return;
+            }
+
+            let targetColumn;
+            let showDeleteBtn = false;
+
+            // Distribution logic: Items 1-2 in col1, 3-4 in col2, 5-6 in col3
+            if (col1Count < 2) {
+                targetColumn = col1;
+                showDeleteBtn = totalItems >= 1; // Show delete for 2nd item and beyond
+            } else if (col2Count < 2) {
+                targetColumn = col2;
+                showDeleteBtn = true;
+            } else {
+                targetColumn = col3;
+                showDeleteBtn = true;
+            }
+            
             const newFieldGroup = document.createElement('div');
             newFieldGroup.className = 'field-group';
             newFieldGroup.innerHTML = `
@@ -1061,10 +1104,10 @@
                         <option value="Imposto permanente">Imposto permanente</option>
                         <option value="Imposto temporaneo">Imposto temporaneo</option>
                     </select>
-                    <button type="button" class="delete-row-btn" onclick="deleteInfrastructureRow(this)" title="Elimina">🗑️</button>
+                    ${showDeleteBtn ? '<button type="button" class="delete-row-btn" onclick="deleteInfrastructureRow(this)" title="Elimina">✕</button>' : ''}
                 </div>
             `;
-            container.appendChild(newFieldGroup);
+            targetColumn.appendChild(newFieldGroup);
         });
 
         // Funzione per eliminare righe infrastruttura
