@@ -454,30 +454,7 @@
             <!-- Descrizione del soprassuolo -->
             <section class="form-section">
                 <div class="section-header">Descrizione del soprassuolo</div>
-                <div class="row">
-                    <div class="field-group">
-                        <label for="anno-rilievo">Anno rilievo</label>
-                        <input type="number" id="anno-rilievo" name="anno-rilievo" min="1900" max="9999" step="1">
-                    </div>
-                    <div class="field-group">
-                        <label for="piante-ettaro">Piante ad ettaro</label>
-                        <input type="number" id="piante-ettaro" name="piante-ettaro" max="999999" step="1">
-                    </div>
-                    <div class="field-group">
-                        <label for="eta-soprassuolo">Età del soprassuolo</label>
-                        <input type="number" id="eta-soprassuolo" name="eta-soprassuolo" max="999" step="1">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="field-group">
-                        <label for="copertura">Copertura (%)</label>
-                        <div class="input-with-unit">
-                            <input type="number" step="1" max="100" id="copertura" name="copertura">
-                            <span class="unit">%</span>
-                        </div>
-                    </div>
-                </div>
-
+                
                 <!-- Tabella specie -->
                 <div class="species-table">
                     <table>
@@ -569,24 +546,48 @@
                     <button type="button" id="add-species" class="add-row-btn">+ Aggiungi specie</button>
                 </div>
 
+                <div class="row">
+                    <div class="field-group">
+                        <label for="anno-rilievo">Anno rilievo</label>
+                        <input type="number" id="anno-rilievo" name="anno-rilievo" min="1900" max="9999" step="1">
+                    </div>
+                    <div class="field-group">
+                        <label for="piante-ettaro">Piante ad ettaro</label>
+                        <input type="number" id="piante-ettaro" name="piante-ettaro" max="999999" step="1">
+                    </div>
+                    <div class="field-group">
+                        <label for="eta-soprassuolo">Età del soprassuolo</label>
+                        <input type="number" id="eta-soprassuolo" name="eta-soprassuolo" max="999" step="1">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field-group">
+                        <label for="copertura">Copertura (%)</label>
+                        <div class="input-with-unit">
+                            <input type="number" step="1" max="100" id="copertura" name="copertura">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Calcoli volume -->
                 <div class="volume-calculations">
                     <div class="row">
                         <div class="field-group">
                             <label for="volume-totale">Volume totale (mc)</label>
-                            <input type="number" step="0.01" max="9999.99" id="volume-totale" name="volume-totale" readonly>
+                            <input type="number" step="0.01" max="9999.99" id="volume-totale" name="volume-totale">
                         </div>
                         <div class="field-group">
                             <label for="imd">Imd</label>
-                            <input type="number" step="0.1" max="99.9" id="imd" name="imd" readonly>
+                            <input type="number" step="0.1" max="99.9" id="imd" name="imd">
                         </div>
                         <div class="field-group">
                             <label for="imh">Imh</label>
-                            <input type="number" step="0.1" max="99.9" id="imh" name="imh" readonly>
+                            <input type="number" step="0.1" max="99.9" id="imh" name="imh">
                         </div>
                         <div class="field-group">
                             <label for="imv">Imv</label>
-                            <input type="number" step="0.1" max="99.9" id="imv" name="imv" readonly>
+                            <input type="number" step="0.1" max="99.9" id="imv" name="imv">
                         </div>
                     </div>
                 </div>
