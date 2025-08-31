@@ -192,6 +192,21 @@ body {
 .caratteristiche-layout .field-group:nth-child(3) { grid-area: pendenza; }
 .caratteristiche-layout .field-group:nth-child(4) { grid-area: fertilita; }
 
+.soprassuolo-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 12px;
+    padding: 12px;
+    grid-template-areas: 
+        "anno-rilievo piante-ettaro eta-soprassuolo copertura";
+}
+
+.soprassuolo-layout .inquadramento-row:nth-child(1) { grid-area: anno-rilievo; }
+.soprassuolo-layout .inquadramento-row:nth-child(2) { grid-area: piante-ettaro; }
+.soprassuolo-layout .inquadramento-row:nth-child(3) { grid-area: eta-soprassuolo; }
+.soprassuolo-layout .inquadramento-row:nth-child(4) { grid-area: copertura; }
+
 /* LAYOUT INFRASTRUTTURE A TRE COLONNE */
 .infrastructure-container {
     display: flex;
@@ -491,23 +506,23 @@ input[type="number"] {
 
 /* Campi descrizione soprassuolo */
 #anno-rilievo {
-    width: 90px;
-    max-width: 90px;
+    width: 50px;
+    max-width: 50px;
 }
 
 #piante-ettaro {
-    width: 110px;
-    max-width: 110px;
+    width: 60px;
+    max-width: 60px;
 }
 
 #eta-soprassuolo {
-    width: 80px;
-    max-width: 80px;
+    width: 40px;
+    max-width: 40px;
 }
 
 #copertura {
-    width: 75px;
-    max-width: 75px;
+    width: 40px;
+    max-width: 40px;
 }
 
 #fertilita {
@@ -517,13 +532,13 @@ input[type="number"] {
 
 /* Calcoli volume */
 #volume-totale {
-    width: 100px;
-    max-width: 100px;
+    width: 70px;
+    max-width: 70px;
 }
 
 #imd, #imh, #imv {
-    width: 70px;
-    max-width: 70px;
+    width: 42px;
+    max-width: 42px;
 }
 
 /* Intensità intervento */
