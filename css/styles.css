@@ -411,6 +411,49 @@ input[type="number"] {
     max-width: 70px;
 }
 
+/* ==================================================
+   CARATTERIZZAZIONE DELLA PARTICELLA
+   ================================================== */
+
+.caratterizzazione-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px;
+}
+
+/* Prima riga: forma di governo, composizione, grado evolutivo, tipo colturale */
+.caratterizzazione-row-1 {
+    display: flex;
+    gap: 27px;
+    flex-wrap: wrap;
+}
+
+.caratterizzazione-row-1 .field-group {
+    flex: 0 0 auto;
+}
+
+/* Seconda riga: tipo forestale e destinazione */
+.caratterizzazione-row-2 {
+    display: flex;
+    gap: 27px;
+    flex-wrap: wrap;
+}
+
+.caratterizzazione-row-2 .field-group {
+    flex: 1;
+}
+
+/* Terza riga: compresa forestale */
+.caratterizzazione-row-3 {
+    display: flex;
+}
+
+.caratterizzazione-row-3 .field-group {
+    flex: 1;
+    max-width: none;
+}
+
 /* Campi caratterizzazione particella */
 #forma-governo {
     width: 110px;
@@ -428,8 +471,12 @@ input[type="number"] {
 }
 
 #tipo-colturale {
-    width: 210px;
-    max-width: 210px;
+    width: 200px;
+    max-width: 200px;
+}
+
+#tipo-forestale {
+    min-width: 300px;
 }
 
 #destinazione {
@@ -437,10 +484,9 @@ input[type="number"] {
     max-width: 110px;
 }
 
-#tipo-forestale {
-    width: 500px;
-    max-width: 500px;
-    min-width: 500px;
+#compresa-forestale {
+    width: 95%;
+    max-width: 95%;
 }
 
 /* Campi descrizione soprassuolo */
