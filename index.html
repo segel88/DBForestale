@@ -556,34 +556,28 @@
                         <input type="number" id="piante-ettaro" name="piante-ettaro" max="999999" step="1">
                     </div>
                     <div class="inquadramento-row">
-                        <label for="eta-soprassuolo">Età del soprassuolo</label>
+                        <label for="eta-soprassuolo">Età</label>
                         <input type="number" id="eta-soprassuolo" name="eta-soprassuolo" max="999" step="1">
                     </div>
                     <div class="inquadramento-row">
                         <label for="copertura">Copertura (%)</label>
                         <input type="number" step="1" max="100" id="copertura" name="copertura">
                     </div>
-                </div>
-
-                <!-- Calcoli volume -->
-                <div class="volume-calculations">
-                    <div class="row">
-                        <div class="field-group">
-                            <label for="volume-totale">Volume totale (mc)</label>
-                            <input type="number" step="0.01" max="9999.99" id="volume-totale" name="volume-totale">
-                        </div>
-                        <div class="field-group">
-                            <label for="imd">Imd</label>
-                            <input type="number" step="0.1" max="99.9" id="imd" name="imd">
-                        </div>
-                        <div class="field-group">
-                            <label for="imh">Imh</label>
-                            <input type="number" step="0.1" max="99.9" id="imh" name="imh">
-                        </div>
-                        <div class="field-group">
-                            <label for="imv">Imv</label>
-                            <input type="number" step="0.1" max="99.9" id="imv" name="imv">
-                        </div>
+                    <div class="inquadramento-row">
+                        <label for="volume-totale">Volume totale (mc)</label>
+                        <input type="number" step="0.01" max="9999.99" id="volume-totale" name="volume-totale">
+                    </div>
+                    <div class="inquadramento-row">
+                        <label for="imd">Imd</label>
+                        <input type="number" step="0.1" max="99.9" id="imd" name="imd">
+                    </div>
+                    <div class="inquadramento-row">
+                        <label for="imh">Imh</label>
+                        <input type="number" step="0.1" max="99.9" id="imh" name="imh">
+                    </div>
+                    <div class="inquadramento-row">
+                        <label for="imv">Imv</label>
+                        <input type="number" step="0.1" max="99.9" id="imv" name="imv">
                     </div>
                 </div>
             </section>
@@ -687,14 +681,16 @@
                             </tr>
                         </tbody>
                     </table>
-                    <button type="button" id="add-intervention" class="add-row-btn">+ Aggiungi intervento</button>
                 </div>
 
                 <div class="row">
-                    <div class="field-group">
+                    <button type="button" id="add-intervention" class="add-row-btn">+ Aggiungi intervento</button>
+                    <div class="row-separator"></div>
+                    <div class="field-group inline-field">
                         <label for="intensita-intervento">Intensità intervento</label>
                         <input type="number" step="1" max="99" id="intensita-intervento" name="intensita-intervento">
                     </div>
+                    <div class="row-separator"></div>
                     <div class="field-group">
                         <label for="autorizzazione">
                             <input type="checkbox" id="autorizzazione" name="autorizzazione">

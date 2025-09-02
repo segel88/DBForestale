@@ -194,18 +194,39 @@ body {
 
 .soprassuolo-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: auto;
     gap: 12px;
     padding: 12px;
     grid-template-areas: 
-        "anno-rilievo piante-ettaro eta-soprassuolo copertura";
+        "anno-rilievo piante-ettaro eta-soprassuolo copertura volume-totale imd imh imv";
 }
 
 .soprassuolo-layout .inquadramento-row:nth-child(1) { grid-area: anno-rilievo; }
 .soprassuolo-layout .inquadramento-row:nth-child(2) { grid-area: piante-ettaro; }
 .soprassuolo-layout .inquadramento-row:nth-child(3) { grid-area: eta-soprassuolo; }
 .soprassuolo-layout .inquadramento-row:nth-child(4) { grid-area: copertura; }
+.soprassuolo-layout .inquadramento-row:nth-child(5) { grid-area: volume-totale; }
+.soprassuolo-layout .inquadramento-row:nth-child(6) { grid-area: imd; }
+.soprassuolo-layout .inquadramento-row:nth-child(7) { grid-area: imh; }
+.soprassuolo-layout .inquadramento-row:nth-child(8) { grid-area: imv; }
+
+/* Override inquadramento-row layout for soprassuolo section */
+.soprassuolo-layout .inquadramento-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    text-align: center;
+}
+
+.soprassuolo-layout .inquadramento-row label {
+    text-align: center;
+}
+
+.soprassuolo-layout .inquadramento-row input {
+    text-align: center;
+}
 
 /* LAYOUT INFRASTRUTTURE A TRE COLONNE */
 .infrastructure-container {
@@ -511,8 +532,9 @@ input[type="number"] {
 }
 
 #piante-ettaro {
-    width: 60px;
-    max-width: 60px;
+    width: 45px;
+    max-width: 45px;
+    text-align: center;
 }
 
 #eta-soprassuolo {
@@ -543,8 +565,8 @@ input[type="number"] {
 
 /* Intensità intervento */
 #intensita-intervento {
-    width: 60px;
-    max-width: 60px;
+    width: 30px;
+    max-width: 30px;
 }
 
 /* ==================================================
@@ -589,7 +611,7 @@ input[type="number"] {
    ================================================== */
 
 input[type="checkbox"] {
-    width: auto;
+    width: 100%;
     margin-right: 8px;
     transform: scale(1.2);
 }
@@ -609,7 +631,7 @@ label:has(input[type="checkbox"]) {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 15px 0;
+    margin: 1.5px 0;
     background-color: white;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     border-radius: 6px;
@@ -651,9 +673,74 @@ table td input:focus {
    ================================================== */
 
 .species-table,
-.intervention-table,
 .ultimo-intervento-table {
-    padding: 15px;
+    padding: 15px 15px 3.75px 15px;
+}
+
+.intervention-table {
+    padding: 15px 15px 0px 15px;
+}
+
+.intervention-table table {
+    table-layout: fixed;
+}
+
+.intervention-table table td {
+    padding: 5px 3px;
+}
+
+.intervention-table table td:first-child {
+    padding: 5px 13px 5px 7px;
+}
+
+.intervention-table table td:last-child {
+    padding: 5px 1px 5px 3px;
+}
+
+/* Force specific column widths for intervention table */
+.intervention-table table th:nth-child(1),
+.intervention-table table td:nth-child(1) { width: 320px; }
+.intervention-table table th:nth-child(2),
+.intervention-table table td:nth-child(2) { width: 60px; }
+.intervention-table table th:nth-child(3),
+.intervention-table table td:nth-child(3) { width: 40px; }
+.intervention-table table th:nth-child(4),
+.intervention-table table td:nth-child(4) { width: 37px; }
+.intervention-table table th:nth-child(5),
+.intervention-table table td:nth-child(5) { width: 60px; }
+.intervention-table table th:nth-child(6),
+.intervention-table table td:nth-child(6) { width: 60px; }
+.intervention-table table th:nth-child(7),
+.intervention-table table td:nth-child(7) { width: 30px; }
+
+.row-separator {
+    width: 1px;
+    height: 25px;
+    background-color: #ddd;
+    margin: 0 12px;
+    align-self: center;
+}
+
+.row .add-row-btn {
+    align-self: center;
+}
+
+.field-group.inline-field {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.row .field-group {
+    align-self: center;
+}
+
+.row .field-group:has(input[type="checkbox"]) {
+    transform: translateY(1px);
+}
+
+.intervention-table + .row {
+    margin-left: 15px;
 }
 
 .cadastral-container {
@@ -674,8 +761,8 @@ table td input:focus {
 .species-table table th:first-child,
 .species-table table td:first-child {
     text-align: left;
-    width: 200px;
-    max-width: 200px;
+    width: 300px;
+    max-width: 300px;
 }
 
 .species-table table td:first-child select {
@@ -683,39 +770,21 @@ table td input:focus {
     font-size: 0.9em;
 }
 
-.species-table table td:nth-child(2) input { width: 50px; max-width: 50px; }
-.species-table table td:nth-child(3) input { width: 65px; max-width: 65px; }
-.species-table table td:nth-child(4) input { width: 65px; max-width: 65px; }
-.species-table table td:nth-child(5) input { width: 80px; max-width: 80px; }
-.species-table table td:nth-child(6) input { width: 80px; max-width: 80px; }
+.species-table table td:nth-child(2) input { width: 40px; max-width: 40px; }
+.species-table table td:nth-child(3) input { width: 40px; max-width: 40px; }
+.species-table table td:nth-child(4) input { width: 40px; max-width: 40px; }
+.species-table table td:nth-child(5) input { width: 70px; max-width: 70px; }
+.species-table table td:nth-child(6) input { width: 70px; max-width: 70px; }
 
 /* Tabella interventi */
-.ultimo-intervento-table table td:first-child select,
-.intervention-table table td:first-child select {
-    width: 250px;
-    max-width: 250px;
+.ultimo-intervento-table table td:first-child select {
+    width: 330px;
+    max-width: 330px;
 }
 
-.ultimo-intervento-table table td:nth-child(2) input,
-.intervention-table table td:nth-child(3) input {
-    width: 80px;
-    max-width: 80px;
-}
-
-.intervention-table table td:nth-child(2) input {
-    width: 130px;
-    max-width: 130px;
-}
-
-.intervention-table table td:nth-child(4) input {
-    width: 80px;
-    max-width: 80px;
-}
-
-.intervention-table table td:nth-child(5) input,
-.intervention-table table td:nth-child(6) input {
-    width: 100px;
-    max-width: 100px;
+.ultimo-intervento-table table td:nth-child(2) input {
+    width: 38px;
+    max-width: 38px;
 }
 
 /* Tabelle catastali */
@@ -725,11 +794,25 @@ table td input:focus {
     padding: 6px;
 }
 
+/* Cadastral table column widths */
+.cadastral-table table {
+    table-layout: auto;
+    width: 100%;
+    min-width: max-content;
+}
+
+.cadastral-table table th:nth-child(1),
+.cadastral-table table td:nth-child(1) { min-width: 150px; width: 150px; } /* Comune */
+.cadastral-table table th:nth-child(2),
+.cadastral-table table td:nth-child(2) { min-width: 45px; width: 45px; } /* Foglio */
+.cadastral-table table th:nth-child(3),
+.cadastral-table table td:nth-child(3) { min-width: 52px; width: 52px; } /* Part */
+.cadastral-table table th:nth-child(4),
+.cadastral-table table td:nth-child(4) { min-width: 72px; width: 72px; } /* Sup. (ha) */
+
 /* Colonne pulsanti elimina */
 .species-table table th:nth-child(7),
 .species-table table td:nth-child(7),
-.intervention-table table th:nth-child(7),
-.intervention-table table td:nth-child(7),
 .cadastral-table table th:nth-child(5),
 .cadastral-table table td:nth-child(5) {
     width: 40px;
@@ -749,7 +832,7 @@ table td input:focus {
     cursor: pointer;
     font-size: 0.9em;
     transition: background-color 0.3s ease;
-    margin-top: 10px;
+    margin-top: 2.5px;
 }
 
 .add-row-btn:hover {
@@ -827,25 +910,6 @@ table td input:focus {
     transform: translateY(-2px);
 }
 
-/* ==================================================
-   CALCOLI VOLUME
-   ================================================== */
-
-.volume-calculations {
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #ddd;
-}
-
-.volume-calculations .row {
-    padding: 0;
-    gap: 10px;
-    justify-content: flex-start;
-}
-
-.volume-calculations .field-group {
-    min-width: 150px;
-}
 
 /* ==================================================
    AZIONI DEL MODULO
@@ -1239,7 +1303,7 @@ table td input:focus {
 .particella-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 15px 0;
+    margin: 1.5px 0;
     background-color: white;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     border-radius: 6px;
@@ -1265,6 +1329,24 @@ table td input:focus {
 .particella-table th:last-child {
     text-align: center;
     width: 120px;
+}
+
+/* Set specific widths for all particella table columns */
+.particella-table th:nth-child(3) {
+    width: 100px; /* Superficie column */
+}
+
+.particella-table th:nth-child(4) {
+    width: 120px; /* Specie column */
+}
+
+.particella-table th:nth-child(5) {
+    width: 150px; /* Intervento Programmato column */
+}
+
+.particella-table th:nth-child(6) {
+    width: 60px; /* Anno column */
+    text-align: center;
 }
 
 .particella-table tbody tr {
@@ -1482,7 +1564,7 @@ table td input:focus {
     
     .species-table table th:first-child,
     .species-table table td:first-child {
-        width: auto;
+        width: 100%;
     }
 }
 
