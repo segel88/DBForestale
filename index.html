@@ -150,8 +150,78 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Impostazioni - Header e Footer</h2>
+            </div>
+            <div class="modal-body">
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-tab="header">Header</button>
+                    <button class="settings-tab" data-tab="footer">Footer</button>
+                </div>
+                
+                <div id="header-settings" class="settings-content active">
+                    <h3>Personalizza Header (parte superiore della pagina)</h3>
+                    <div class="editor-toolbar">
+                        <button type="button" onclick="formatText('bold')" title="Grassetto"><b>B</b></button>
+                        <button type="button" onclick="formatText('italic')" title="Corsivo"><i>I</i></button>
+                        <button type="button" onclick="formatText('underline')" title="Sottolineato"><u>U</u></button>
+                        <select onchange="formatText('fontSize', this.value)">
+                            <option value="">Dimensione</option>
+                            <option value="12px">Piccolo</option>
+                            <option value="14px">Normale</option>
+                            <option value="16px">Grande</option>
+                            <option value="20px">Molto grande</option>
+                        </select>
+                        <button type="button" onclick="formatText('justifyLeft')" title="Allinea a sinistra">◄</button>
+                        <button type="button" onclick="formatText('justifyCenter')" title="Centra">►◄</button>
+                        <button type="button" onclick="formatText('justifyRight')" title="Allinea a destra">►</button>
+                    </div>
+                    <div id="header-editor" class="rich-editor" contenteditable="true" placeholder="Scrivi qui il contenuto dell'header (es. logo, nome azienda, indirizzo...)">
+                        <div style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 10px;">NOME AZIENDA</div>
+                        <div style="text-align: center; font-size: 12px;">Via Example 123, 12345 Città (PR) - Tel: 123.456.7890 - Email: info@azienda.it</div>
+                    </div>
+                </div>
+                
+                <div id="footer-settings" class="settings-content">
+                    <h3>Personalizza Footer (parte inferiore della pagina)</h3>
+                    <div class="editor-toolbar">
+                        <button type="button" onclick="formatText('bold')" title="Grassetto"><b>B</b></button>
+                        <button type="button" onclick="formatText('italic')" title="Corsivo"><i>I</i></button>
+                        <button type="button" onclick="formatText('underline')" title="Sottolineato"><u>U</u></button>
+                        <select onchange="formatText('fontSize', this.value)">
+                            <option value="">Dimensione</option>
+                            <option value="10px">Molto piccolo</option>
+                            <option value="12px">Piccolo</option>
+                            <option value="14px">Normale</option>
+                        </select>
+                        <button type="button" onclick="formatText('justifyLeft')" title="Allinea a sinistra">◄</button>
+                        <button type="button" onclick="formatText('justifyCenter')" title="Centra">►◄</button>
+                        <button type="button" onclick="formatText('justifyRight')" title="Allinea a destra">►</button>
+                    </div>
+                    <div id="footer-editor" class="rich-editor" contenteditable="true" placeholder="Scrivi qui il contenuto del footer (es. firma, data, timbro...)">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                            <div>Tecnico: _________________________</div>
+                            <div>Data: _________________________</div>
+                        </div>
+                        <div style="text-align: center; font-size: 10px; margin-top: 20px;">Documento generato con DB Forestale</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="save-settings-btn" class="modal-btn modal-btn-primary">💾 Salva impostazioni</button>
+                <button type="button" id="cancel-settings-btn" class="modal-btn modal-btn-secondary">Annulla</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Form (initially hidden) -->
     <div id="main-form" class="container hidden">
+        <!-- Dynamic Print Header -->
+        <div class="print-header-content"></div>
+        
         <header class="form-header">
             <h1>SCHEDA DI RILIEVO</h1>
             <div class="db-key">Chiave db: <input type="text" id="chiave-db" maxlength="5" placeholder=""></div>
@@ -772,6 +842,9 @@
                 <button type="reset" class="btn btn-danger">🗑️ Cancella tutto</button>
             </div>
         </form>
+        
+        <!-- Dynamic Print Footer -->
+        <div class="print-footer-content"></div>
     </div>
 
     <script>
@@ -917,7 +990,7 @@
         });
 
         document.getElementById('settings-btn').addEventListener('click', function() {
-            alert('Funzionalità "Impostazioni" in sviluppo');
+            document.getElementById('settings-modal').classList.remove('hidden');
         });
 
         document.getElementById('guide-btn').addEventListener('click', function() {
@@ -1343,6 +1416,100 @@
                 });
             }
         });
+
+        // ========================================
+        // SETTINGS MODAL FUNCTIONALITY
+        // ========================================
+        
+        // Settings modal event listeners
+        document.getElementById('cancel-settings-btn').addEventListener('click', function() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        });
+        
+        document.getElementById('save-settings-btn').addEventListener('click', function() {
+            // Save header and footer content to localStorage
+            const headerContent = document.getElementById('header-editor').innerHTML;
+            const footerContent = document.getElementById('footer-editor').innerHTML;
+            
+            localStorage.setItem('print-header-content', headerContent);
+            localStorage.setItem('print-footer-content', footerContent);
+            
+            // Apply to current page
+            applyHeaderFooter();
+            
+            // Close modal
+            document.getElementById('settings-modal').classList.add('hidden');
+            
+            alert('Impostazioni Header/Footer salvate!');
+        });
+        
+        // Settings tabs functionality
+        document.querySelectorAll('.settings-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active from all tabs and contents
+                document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.settings-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const targetTab = this.dataset.tab;
+                document.getElementById(targetTab + '-settings').classList.add('active');
+            });
+        });
+        
+        // Rich text editor formatting functions
+        function formatText(command, value = null) {
+            document.execCommand(command, false, value);
+        }
+        
+        // Load saved header/footer content on page load
+        function loadHeaderFooterSettings() {
+            const savedHeader = localStorage.getItem('print-header-content');
+            const savedFooter = localStorage.getItem('print-footer-content');
+            
+            if (savedHeader) {
+                document.getElementById('header-editor').innerHTML = savedHeader;
+            }
+            
+            if (savedFooter) {
+                document.getElementById('footer-editor').innerHTML = savedFooter;
+            }
+            
+            // Apply to current page
+            applyHeaderFooter();
+        }
+        
+        // Apply header and footer to the form page
+        function applyHeaderFooter() {
+            const headerContent = localStorage.getItem('print-header-content');
+            const footerContent = localStorage.getItem('print-footer-content');
+            
+            const headerElement = document.querySelector('.print-header-content');
+            const footerElement = document.querySelector('.print-footer-content');
+            
+            if (headerContent && headerElement) {
+                headerElement.innerHTML = headerContent;
+            }
+            
+            if (footerContent && footerElement) {
+                footerElement.innerHTML = footerContent;
+            }
+        }
+        
+        // Close settings modal when clicking outside
+        document.getElementById('settings-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+        
+        // Load settings on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHeaderFooterSettings();
+        });
+
     </script>
 </body>
 </html>
