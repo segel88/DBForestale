@@ -10,6 +10,7 @@ class PWAApp {
         this.setupInstallPrompt();
         this.setupOfflineHandling();
         this.setupNotifications();
+        this.setupAutomaticCalculations();
         this.loadAppData();
     }
 
@@ -82,6 +83,37 @@ class PWAApp {
             const permission = await Notification.requestPermission();
             console.log('Notification permission:', permission);
         }
+    }
+
+    setupAutomaticCalculations() {
+        // Delay execution to ensure DOM elements are available
+        setTimeout(() => {
+            const pfInput = document.getElementById('particella');
+            const spfInput = document.getElementById('sottoparticella');
+            const chiaveDbInput = document.getElementById('chiave-db');
+
+            console.log('PF Input:', pfInput);
+            console.log('SPF Input:', spfInput);
+            console.log('Chiave DB Input:', chiaveDbInput);
+
+            const calculateChiaveDb = () => {
+                const pfValue = pfInput.value.trim();
+                const spfValue = spfInput.value.trim();
+                const concatenated = pfValue + spfValue;
+                console.log('Calculating:', pfValue, '+', spfValue, '=', concatenated);
+                chiaveDbInput.value = concatenated;
+            };
+
+            if (pfInput && spfInput && chiaveDbInput) {
+                pfInput.addEventListener('input', calculateChiaveDb);
+                spfInput.addEventListener('input', calculateChiaveDb);
+                
+                calculateChiaveDb();
+                console.log('Event listeners added successfully');
+            } else {
+                console.error('Could not find required input elements');
+            }
+        }, 100);
     }
 
     showUpdateAvailable() {

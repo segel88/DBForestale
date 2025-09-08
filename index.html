@@ -251,11 +251,11 @@
                             <div class="inquadramento-right">
                                 <div class="inquadramento-row">
                                     <label for="superficie-particella">Superficie particella (ha)</label>
-                                    <input type="number" step="0.0001" max="999.9999" id="superficie-particella" name="superficie-particella">
+                                    <input type="text" id="superficie-particella" name="superficie-particella" readonly placeholder="0.0000">
                                 </div>
                                 <div class="inquadramento-row">
                                     <label for="superficie-sottoparticella">Superficie sottoparticella (ha)</label>
-                                    <input type="number" step="0.0001" max="999.9999" id="superficie-sottoparticella" name="superficie-sottoparticella">
+                                    <input type="text" pattern="[0-9]*\.?[0-9]{0,4}" max="999.9999" id="superficie-sottoparticella" name="superficie-sottoparticella" placeholder="0.0000">
                                 </div>
                             </div>
                         </div>
@@ -866,6 +866,51 @@
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('project-page').classList.add('hidden');
             document.getElementById('main-form').classList.remove('hidden');
+            
+            // Load specific particella data when editing
+            loadCurrentParticellaData();
+        }
+        
+        function loadCurrentParticellaData() {
+            const particellaIndex = localStorage.getItem('current-particella-index');
+            if (particellaIndex !== null) {
+                const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+                const particella = particelleData[parseInt(particellaIndex)];
+                
+                if (particella && particella.formData) {
+                    console.log('Loading data for particella index:', particellaIndex);
+                    Object.keys(particella.formData).forEach(key => {
+                        const element = document.querySelector(`[name="${key}"]`);
+                        if (element) {
+                            // Skip chiave-db field - it should always be calculated, never loaded
+                            if (key !== 'chiave-db') {
+                                element.value = particella.formData[key];
+                                if (key === 'superficie-particella') {
+                                    console.log('Loaded superficie-particella:', particella.formData[key], 'Element value:', element.value);
+                                }
+                            }
+                        }
+                    });
+                    
+                    // After loading all data, recalculate chiave database
+                    setTimeout(() => {
+                        const pfInput = document.getElementById('particella');
+                        const spfInput = document.getElementById('sottoparticella');
+                        const chiaveDbInput = document.getElementById('chiave-db');
+                        
+                        if (pfInput && spfInput && chiaveDbInput) {
+                            const pfValue = pfInput.value.trim();
+                            const spfValue = spfInput.value.trim();
+                            const concatenated = pfValue + spfValue;
+                            chiaveDbInput.value = concatenated;
+                            console.log('Recalculated chiave DB after data load:', concatenated);
+                        }
+                    }, 100);
+                } else {
+                    // Clear form for new particella
+                    document.getElementById('forestry-form').reset();
+                }
+            }
         }
 
         function loadProjectData() {
@@ -921,10 +966,20 @@
                         anno = particella.formData['ultimo-intervento-anno'] || 'Non specificato';
                     }
                     
+                    // Get superficie particella from form data (calculated value) and format to 4 decimals
+                    let superficieParticella = 'Non specificata';
+                    if (particella.formData && particella.formData['superficie-particella']) {
+                        const value = parseFloat(particella.formData['superficie-particella']);
+                        superficieParticella = !isNaN(value) ? value.toFixed(4) : particella.formData['superficie-particella'];
+                    } else if (particella.superficie) {
+                        const value = parseFloat(particella.superficie);
+                        superficieParticella = !isNaN(value) ? value.toFixed(4) : particella.superficie; // fallback to old field
+                    }
+
                     row.innerHTML = `
                         <td class="particella-name">${pfValue}</td>
                         <td class="particella-spf">${spfValue}</td>
-                        <td class="particella-superficie">${particella.superficie || 'Non specificata'}</td>
+                        <td class="particella-superficie">${superficieParticella}</td>
                         <td class="particella-specie">${specieName}</td>
                         <td class="particella-intervento">${interventoProgr}</td>
                         <td class="particella-anno">${anno}</td>
@@ -1043,11 +1098,15 @@
             const originalParticella = particelleData[index];
             
             if (originalParticella) {
+                // Create a deep copy to ensure complete independence
                 const duplicatedParticella = {
-                    ...originalParticella,
                     id: Date.now(),
                     createdAt: new Date().toISOString(),
-                    lastModified: new Date().toISOString()
+                    lastModified: new Date().toISOString(),
+                    localita: originalParticella.localita || '',
+                    superficie: originalParticella.superficie || '',
+                    // Deep copy the form data
+                    formData: originalParticella.formData ? JSON.parse(JSON.stringify(originalParticella.formData)) : {}
                 };
                 
                 particelleData.push(duplicatedParticella);
@@ -1376,46 +1435,63 @@
             alert('Dati salvati con successo!');
         });
 
-        // Validazione decimali per superficie
-        function validateDecimals(inputElement) {
+        // Validazione e formatazione decimali per superficie
+        function validateAndFormatDecimals(inputElement) {
             const value = inputElement.value;
-            if (value && value.includes('.')) {
-                const decimals = value.split('.')[1];
-                if (decimals && decimals.length > 4) {
-                    alert('Errore: Sono consentiti massimo 4 decimali per i campi superficie');
-                    inputElement.value = parseFloat(value).toFixed(4);
+            if (value && value.trim() !== '') {
+                // Replace comma with dot for European decimal format
+                const normalizedValue = value.replace(',', '.');
+                const numValue = parseFloat(normalizedValue);
+                if (!isNaN(numValue) && numValue >= 0 && numValue <= 999.9999) {
+                    // Always format to 4 decimal places
+                    inputElement.value = numValue.toFixed(4);
+                } else {
+                    alert('Inserire un valore numerico valido tra 0 e 999.9999');
+                    inputElement.focus();
                 }
             }
         }
 
+        // Add input validation for superficie sottoparticella (real-time)
+        document.getElementById('superficie-sottoparticella').addEventListener('input', function(e) {
+            const value = e.target.value;
+            // Allow only numbers, dots, and commas
+            const sanitized = value.replace(/[^0-9.,]/g, '');
+            if (sanitized !== value) {
+                e.target.value = sanitized;
+            }
+        });
+
         document.getElementById('superficie-particella').addEventListener('blur', function() {
-            validateDecimals(this);
+            validateAndFormatDecimals(this);
         });
 
         document.getElementById('superficie-sottoparticella').addEventListener('blur', function() {
-            validateDecimals(this);
+            validateAndFormatDecimals(this);
         });
 
-        // Auto-save ogni 30 secondi
+        // Auto-save ogni 30 secondi - save to specific particella
         setInterval(function() {
-            const formData = new FormData(document.getElementById('forestry-form'));
-            const data = Object.fromEntries(formData);
-            localStorage.setItem('forestry-survey-autosave', JSON.stringify(data));
+            const particellaIndex = localStorage.getItem('current-particella-index');
+            if (particellaIndex !== null) {
+                const formData = new FormData(document.getElementById('forestry-form'));
+                const data = Object.fromEntries(formData);
+                
+                const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+                if (particelleData[parseInt(particellaIndex)]) {
+                    particelleData[parseInt(particellaIndex)] = {
+                        ...particelleData[parseInt(particellaIndex)],
+                        formData: data,
+                        lastModified: new Date().toISOString()
+                    };
+                    localStorage.setItem('project-particelle', JSON.stringify(particelleData));
+                    console.log('Auto-saved data for particella index:', particellaIndex);
+                }
+            }
         }, 30000);
 
-        // Caricamento dati salvati
-        window.addEventListener('load', function() {
-            const savedData = localStorage.getItem('forestry-survey-autosave');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                Object.keys(data).forEach(key => {
-                    const element = document.querySelector(`[name="${key}"]`);
-                    if (element) {
-                        element.value = data[key];
-                    }
-                });
-            }
-        });
+        // Remove global auto-load since we now load per-particella data
+        // Data loading is handled by loadCurrentParticellaData() when showMainForm() is called
 
         // ========================================
         // SETTINGS MODAL FUNCTIONALITY
@@ -1508,7 +1584,219 @@
         // Load settings on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadHeaderFooterSettings();
+            setupAutomaticCalculations();
         });
+
+        // Automatic calculation for chiave database (PF + SPF) and superficie
+        function setupAutomaticCalculations() {
+            const pfInput = document.getElementById('particella');
+            const spfInput = document.getElementById('sottoparticella');
+            const chiaveDbInput = document.getElementById('chiave-db');
+            const superficieSottoparticellaInput = document.getElementById('superficie-sottoparticella');
+            const superficieParticellaInput = document.getElementById('superficie-particella');
+
+            console.log('PF Input:', pfInput);
+            console.log('SPF Input:', spfInput);
+            console.log('Chiave DB Input:', chiaveDbInput);
+            console.log('Superficie Sottoparticella Input:', superficieSottoparticellaInput);
+            console.log('Superficie Particella Input:', superficieParticellaInput);
+
+            const calculateChiaveDb = () => {
+                const pfValue = pfInput.value.trim();
+                const spfValue = spfInput.value.trim();
+                const concatenated = pfValue + spfValue;
+                console.log('Calculating chiave db:', pfValue, '+', spfValue, '=', concatenated);
+                if (chiaveDbInput) {
+                    chiaveDbInput.value = concatenated;
+                    console.log('Chiave DB updated to:', concatenated);
+                } else {
+                    console.error('Chiave DB input element not found!');
+                }
+            };
+
+            const calculateSuperficieParticella = () => {
+                const currentPF = pfInput.value.trim();
+                if (!currentPF) {
+                    superficieParticellaInput.value = '';
+                    return;
+                }
+
+                // Calculate total for this PF and update current form
+                const totalSuperficie = calculateTotalSuperficieForPF(currentPF);
+                const formattedValue = totalSuperficie > 0 ? totalSuperficie.toFixed(4) : '';
+                superficieParticellaInput.value = formattedValue;
+                console.log('Setting superficie particella for PF', currentPF, ':', formattedValue, 'Input value:', superficieParticellaInput.value);
+            };
+
+            const calculateTotalSuperficieForPF = (targetPF) => {
+                const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+                let totalSuperficie = 0;
+                
+                console.log('=== DEBUG: Calculating total for PF:', targetPF, '===');
+                
+                // Get current form's PF+SPF combination to exclude it from saved data
+                const currentPF = pfInput.value.trim();
+                const currentSPF = spfInput.value.trim();
+                const currentParticellaIndex = localStorage.getItem('current-particella-index');
+                const currentIndex = currentParticellaIndex ? parseInt(currentParticellaIndex) : -1;
+                
+                console.log(`Current editing: PF=${currentPF}, SPF=${currentSPF}, Index=${currentIndex}`);
+                
+                // Sum all superficie sottoparticella values for the same PF (excluding current)
+                particelleData.forEach((particella, index) => {
+                    if (particella.formData) {
+                        const particellaPF = particella.formData['particella'];
+                        const particellaSPF = particella.formData['sottoparticella'];
+                        const superficieSottoRaw = particella.formData['superficie-sottoparticella'];
+                        const superficieSotto = parseFloat(superficieSottoRaw) || 0;
+                        
+                        console.log(`Particella ${index}: PF=${particellaPF}, SPF=${particellaSPF}, Superficie=${superficieSottoRaw} -> ${superficieSotto}`);
+                        
+                        // Skip if this is the current particella being edited
+                        if (index === currentIndex) {
+                            console.log(`  -> SKIPPED (current particella being edited)`);
+                            return;
+                        }
+                        
+                        if (particellaPF === targetPF && superficieSotto > 0) {
+                            totalSuperficie += superficieSotto;
+                            console.log(`  -> Added ${superficieSotto}, running total: ${totalSuperficie}`);
+                        }
+                    }
+                });
+
+                // Add current form's superficie sottoparticella if it matches the target PF
+                const currentSuperficieSottoRaw = superficieSottoparticellaInput.value;
+                const currentSuperficieSotto = parseFloat(currentSuperficieSottoRaw) || 0;
+                
+                console.log(`Current form: PF=${currentPF}, SPF=${currentSPF}, Superficie=${currentSuperficieSottoRaw} -> ${currentSuperficieSotto}`);
+                
+                if (currentPF === targetPF && currentSuperficieSotto > 0) {
+                    totalSuperficie += currentSuperficieSotto;
+                    console.log(`  -> Added current form ${currentSuperficieSotto}, final total: ${totalSuperficie}`);
+                }
+
+                console.log('=== FINAL TOTAL:', totalSuperficie, '===');
+                return totalSuperficie;
+            };
+
+            const updateAllParticelleSuperficie = () => {
+                // Get current data to determine which PFs need updating
+                const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+                const pfToUpdate = new Set();
+                
+                // Find all unique PF values that need updating
+                particelleData.forEach(particella => {
+                    if (particella.formData && particella.formData['particella']) {
+                        pfToUpdate.add(particella.formData['particella']);
+                    }
+                });
+                
+                // Also add current form's PF
+                const currentPF = pfInput.value.trim();
+                if (currentPF) {
+                    pfToUpdate.add(currentPF);
+                }
+
+                // Update all particelle data with new superficie particella values
+                let dataChanged = false;
+                particelleData.forEach(particella => {
+                    if (particella.formData && particella.formData['particella']) {
+                        const particellaPF = particella.formData['particella'];
+                        if (pfToUpdate.has(particellaPF)) {
+                            const newTotal = calculateTotalSuperficieForPF(particellaPF);
+                            const newValue = newTotal > 0 ? newTotal.toFixed(4) : '';
+                            
+                            if (particella.formData['superficie-particella'] !== newValue) {
+                                particella.formData['superficie-particella'] = newValue;
+                                dataChanged = true;
+                            }
+                        }
+                    }
+                });
+
+                // Save updated data if changes were made
+                if (dataChanged) {
+                    localStorage.setItem('project-particelle', JSON.stringify(particelleData));
+                    console.log('Updated all particelle superficie values');
+                    
+                    // Refresh the particelle table (it will update in background even if not visible)
+                    if (typeof loadParticellaCards === 'function') {
+                        loadParticellaCards();
+                        console.log('Refreshed particelle table in background');
+                    }
+                }
+            };
+
+            const loadSuperficieSottoparticella = () => {
+                const currentPF = pfInput.value.trim();
+                const currentSPF = spfInput.value.trim();
+                
+                if (!currentPF || !currentSPF) {
+                    return;
+                }
+
+                // Look for existing data for this PF+SPF combination
+                const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+                
+                for (let particella of particelleData) {
+                    if (particella.formData) {
+                        const particellaPF = particella.formData['particella'];
+                        const particellaSPF = particella.formData['sottoparticella'];
+                        
+                        if (particellaPF === currentPF && particellaSPF === currentSPF) {
+                            const savedSuperficie = particella.formData['superficie-sottoparticella'];
+                            if (savedSuperficie && !superficieSottoparticellaInput.value) {
+                                superficieSottoparticellaInput.value = savedSuperficie;
+                                console.log('Loaded existing superficie sottoparticella:', savedSuperficie);
+                                break;
+                            }
+                        }
+                    }
+                }
+            };
+
+            const handlePFSPFChange = () => {
+                calculateChiaveDb();
+                loadSuperficieSottoparticella();
+                calculateSuperficieParticella();
+            };
+
+            const handleSuperficieChange = () => {
+                calculateSuperficieParticella();
+                
+                // Save current form data before updating all particelle
+                const particellaIndex = localStorage.getItem('current-particella-index');
+                if (particellaIndex !== null) {
+                    const formData = new FormData(document.getElementById('forestry-form'));
+                    const data = Object.fromEntries(formData);
+                    
+                    const particelleData = JSON.parse(localStorage.getItem('project-particelle') || '[]');
+                    if (particelleData[parseInt(particellaIndex)]) {
+                        particelleData[parseInt(particellaIndex)] = {
+                            ...particelleData[parseInt(particellaIndex)],
+                            formData: data,
+                            lastModified: new Date().toISOString()
+                        };
+                        localStorage.setItem('project-particelle', JSON.stringify(particelleData));
+                        console.log('Saved current form data before superficie update');
+                    }
+                }
+                
+                updateAllParticelleSuperficie();
+            };
+
+            if (pfInput && spfInput && chiaveDbInput && superficieSottoparticellaInput && superficieParticellaInput) {
+                pfInput.addEventListener('input', handlePFSPFChange);
+                spfInput.addEventListener('input', handlePFSPFChange);
+                superficieSottoparticellaInput.addEventListener('input', handleSuperficieChange);
+                
+                handlePFSPFChange();
+                console.log('Event listeners added successfully');
+            } else {
+                console.error('Could not find required input elements');
+            }
+        }
 
     </script>
 </body>
