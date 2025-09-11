@@ -605,10 +605,10 @@
                                     </select>
                                 </td>
                                 <td><input type="number" step="1" max="99" class="no-spinner"></td>
-                                <td><input type="number" step="1" max="999" class="no-spinner"></td>
-                                <td><input type="number" step="1" max="999" class="no-spinner"></td>
-                                <td><input type="number" step="0.01" max="9999.99"></td>
-                                <td><input type="number" step="0.01"></td>
+                                <td><input type="number" step="1" max="999" class="no-spinner diameter-field"></td>
+                                <td><input type="number" step="1" max="999" class="no-spinner height-field"></td>
+                                <td><input type="number" step="0.01" max="9999.99" readonly class="calculated-field volume-field"></td>
+                                <td><input type="number" step="0.01" readonly class="calculated-field volume-per-hectare-field"></td>
                                 <td></td>
                             </tr>
                         </tbody>
@@ -635,7 +635,7 @@
                     </div>
                     <div class="inquadramento-row">
                         <label for="volume-totale">Volume totale (mc)</label>
-                        <input type="number" step="0.01" max="9999.99" id="volume-totale" name="volume-totale">
+                        <input type="number" step="0.01" max="9999.99" id="volume-totale" name="volume-totale" readonly class="calculated-field volume-total-field">
                     </div>
                     <div class="inquadramento-row">
                         <label for="imd">Imd</label>
@@ -1310,10 +1310,10 @@
                     </select>
                 </td>
                 <td><input type="number" step="1" max="99" class="no-spinner"></td>
-                <td><input type="number" step="1" max="999" class="no-spinner"></td>
-                <td><input type="number" step="1" max="999" class="no-spinner"></td>
-                <td><input type="number" step="0.01" max="9999.99"></td>
-                <td><input type="number" step="0.01"></td>
+                <td><input type="number" step="1" max="999" class="no-spinner diameter-field"></td>
+                <td><input type="number" step="1" max="999" class="no-spinner height-field"></td>
+                <td><input type="number" step="0.01" max="9999.99" readonly class="calculated-field volume-field"></td>
+                <td><input type="number" step="0.01" readonly class="calculated-field volume-per-hectare-field"></td>
                 <td><button type="button" class="delete-row-btn" onclick="deleteSpeciesRow(this)">🗑️</button></td>
             `;
         });
@@ -1364,6 +1364,10 @@
         function deleteSpeciesRow(button) {
             const row = button.closest('tr');
             row.remove();
+            // Validate percentages after deletion
+            validateTotalPercentage();
+            // Recalculate total volume after deletion
+            calculateTotalVolume();
         }
 
         // Funzione per eliminare righe intervento
@@ -1797,6 +1801,195 @@
                 console.error('Could not find required input elements');
             }
         }
+
+        // Percentage validation function
+        function validateTotalPercentage() {
+            const speciesTable = document.querySelector('.species-table tbody');
+            const rows = speciesTable.querySelectorAll('tr');
+            let totalPercentage = 0;
+            const percentageFields = [];
+            
+            // Calculate total percentage across all species
+            rows.forEach(row => {
+                const percentageField = row.querySelector('td:nth-child(2) input');
+                if (percentageField) {
+                    const percentage = parseFloat(percentageField.value) || 0;
+                    totalPercentage += percentage;
+                    percentageFields.push(percentageField);
+                }
+            });
+            
+            // Remove previous error classes
+            percentageFields.forEach(field => {
+                field.classList.remove('percentage-error', 'percentage-warning');
+            });
+            
+            // Check if total exceeds 100%
+            if (totalPercentage > 100) {
+                // Add error class to all percentage fields
+                percentageFields.forEach(field => {
+                    field.classList.add('percentage-error');
+                });
+                
+                alert(`Errore: La percentuale totale delle specie è ${totalPercentage}%, che supera il 100%. Per favore, regola le percentuali delle specie.`);
+                return false;
+            } else if (totalPercentage > 90 && totalPercentage <= 100) {
+                // Add warning class when close to 100%
+                percentageFields.forEach(field => {
+                    field.classList.add('percentage-warning');
+                });
+            }
+            
+            return true;
+        }
+
+        // Function to calculate and update total volume
+        function calculateTotalVolume() {
+            const speciesTable = document.querySelector('.species-table tbody');
+            const rows = speciesTable.querySelectorAll('tr');
+            let totalVolume = 0;
+            
+            // Sum all individual species volumes
+            rows.forEach(row => {
+                const volumeField = row.querySelector('.volume-field');
+                if (volumeField && volumeField.value) {
+                    const volume = parseFloat(volumeField.value) || 0;
+                    totalVolume += volume;
+                }
+            });
+            
+            // Update the Volume totale field
+            const volumeTotaleField = document.getElementById('volume-totale');
+            if (volumeTotaleField) {
+                volumeTotaleField.value = totalVolume > 0 ? totalVolume.toFixed(4) : '';
+            }
+        }
+
+        // Volume calculation function
+        function calculateVolume(diameterField, heightField, volumeField) {
+            const diameter = parseFloat(diameterField.value) || 0; // d in cm
+            const height = parseFloat(heightField.value) || 0; // h in m
+            
+            // Get the percentage from the same row (second column)
+            const row = diameterField.closest('tr');
+            const percentageField = row.querySelector('td:nth-child(2) input');
+            const percentage = parseFloat(percentageField.value) || 0; // % as integer (e.g., 50 for 50%)
+            
+            // Get volume per hectare field from the same row (sixth column)
+            const volumePerHectareField = row.querySelector('.volume-per-hectare-field');
+            
+            // Get piante ad ettaro from the form
+            const piantePinInput = document.getElementById('piante-ettaro');
+            const pianteEttaro = parseFloat(piantePinInput.value) || 0;
+            
+            // Get superficie sottoparticella from the form
+            const superficieInput = document.getElementById('superficie-sottoparticella');
+            const superficieSotto = parseFloat(superficieInput.value) || 0;
+            
+            if (diameter > 0 && height > 0 && percentage > 0 && pianteEttaro > 0) {
+                // Base volume formula: ((π/4) × d²) × h × 0.5
+                // d needs to be converted from cm to m: d/100
+                const diameterInMeters = diameter / 100;
+                const baseVolume = ((Math.PI / 4) * Math.pow(diameterInMeters, 2)) * height * 0.5;
+                
+                // Volume per hectare formula: baseVolume × (pianteEttaro × (percentage/100))
+                const volumePerHectare = baseVolume * (pianteEttaro * (percentage / 100));
+                
+                // Set volume per hectare
+                if (volumePerHectareField) {
+                    volumePerHectareField.value = volumePerHectare.toFixed(4);
+                }
+                
+                // Total volume formula: volumePerHectare × superficieSotto
+                if (superficieSotto > 0) {
+                    const totalVolume = volumePerHectare * superficieSotto;
+                    volumeField.value = totalVolume.toFixed(4);
+                } else {
+                    volumeField.value = '';
+                }
+            } else {
+                volumeField.value = '';
+                if (volumePerHectareField) {
+                    volumePerHectareField.value = '';
+                }
+            }
+            
+            // Update total volume after individual volume calculation
+            calculateTotalVolume();
+        }
+
+        // Add event listeners for existing species row
+        document.addEventListener('DOMContentLoaded', function() {
+            const speciesTable = document.querySelector('.species-table tbody');
+            
+            // Function to add calculation listeners to a row
+            function addCalculationListeners(row) {
+                const diameterField = row.querySelector('.diameter-field');
+                const heightField = row.querySelector('.height-field');
+                const volumeField = row.querySelector('.volume-field');
+                const percentageField = row.querySelector('td:nth-child(2) input');
+                
+                if (diameterField && heightField && volumeField && percentageField) {
+                    function updateVolume() {
+                        calculateVolume(diameterField, heightField, volumeField);
+                    }
+                    
+                    function validateAndUpdateVolume() {
+                        // Validate percentage first
+                        validateTotalPercentage();
+                        // Then update volume
+                        calculateVolume(diameterField, heightField, volumeField);
+                    }
+                    
+                    diameterField.addEventListener('input', updateVolume);
+                    heightField.addEventListener('input', updateVolume);
+                    percentageField.addEventListener('input', validateAndUpdateVolume);
+                }
+            }
+            
+            // Function to update all species volumes when global fields change
+            function updateAllSpeciesVolumes() {
+                const speciesRows = speciesTable.querySelectorAll('tr');
+                speciesRows.forEach(row => {
+                    const diameterField = row.querySelector('.diameter-field');
+                    const heightField = row.querySelector('.height-field');
+                    const volumeField = row.querySelector('.volume-field');
+                    
+                    if (diameterField && heightField && volumeField) {
+                        // Call calculateVolume which will also update total volume
+                        calculateVolume(diameterField, heightField, volumeField);
+                    }
+                });
+                // Note: calculateTotalVolume is called by each calculateVolume call above
+            }
+            
+            // Add listeners to existing rows
+            const existingRows = speciesTable.querySelectorAll('tr');
+            existingRows.forEach(addCalculationListeners);
+            
+            // Add listeners to global fields that affect all species calculations
+            const pianteEttaroField = document.getElementById('piante-ettaro');
+            const superficieSottoField = document.getElementById('superficie-sottoparticella');
+            
+            if (pianteEttaroField) {
+                pianteEttaroField.addEventListener('input', updateAllSpeciesVolumes);
+            }
+            
+            if (superficieSottoField) {
+                superficieSottoField.addEventListener('input', updateAllSpeciesVolumes);
+            }
+            
+            // Override the add-species button to include calculation listeners
+            const originalAddSpeciesHandler = document.getElementById('add-species').onclick;
+            document.getElementById('add-species').addEventListener('click', function() {
+                // Wait for the new row to be added
+                setTimeout(function() {
+                    const newRows = speciesTable.querySelectorAll('tr');
+                    const newRow = newRows[newRows.length - 1];
+                    addCalculationListeners(newRow);
+                }, 10);
+            });
+        });
 
     </script>
 </body>
