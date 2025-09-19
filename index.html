@@ -11,6 +11,27 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    <style>
+        .superficie-error {
+            border: 2px solid #ff4444 !important;
+            background-color: #fff5f5 !important;
+        }
+        
+        .error-message {
+            background-color: #ff4444;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .superficie-error .cadastral-superficie-field {
+            border-color: #ff4444 !important;
+            background-color: #fff5f5 !important;
+        }
+    </style>
 </head>
 <body>
     <!-- Home Page -->
@@ -639,15 +660,15 @@
                     </div>
                     <div class="inquadramento-row">
                         <label for="imd">Imd</label>
-                        <input type="number" step="0.1" max="99.9" id="imd" name="imd">
+                        <input type="number" step="0.1" max="99.9" id="imd" name="imd" readonly class="calculated-field">
                     </div>
                     <div class="inquadramento-row">
                         <label for="imh">Imh</label>
-                        <input type="number" step="0.1" max="99.9" id="imh" name="imh">
+                        <input type="number" step="0.1" max="99.9" id="imh" name="imh" readonly class="calculated-field">
                     </div>
                     <div class="inquadramento-row">
                         <label for="imv">Imv</label>
-                        <input type="number" step="0.1" max="99.9" id="imv" name="imv">
+                        <input type="number" step="0.1" max="99.9" id="imv" name="imv" readonly class="calculated-field">
                     </div>
                 </div>
             </section>
@@ -742,11 +763,11 @@
                                         <option value="Altro: dettagliato in descrizione">Altro: dettagliato in descrizione</option>
                                     </select>
                                 </td>
-                                <td><input type="number" step="0.0001" max="999.9999"></td>
-                                <td><input type="number" min="1900" max="2050"></td>
-                                <td><input type="number"></td>
-                                <td><input type="number" step="0.01" max="9999.99"></td>
-                                <td><input type="number" step="0.01" max="9999.99"></td>
+                                <td><input type="number" step="0.0001" max="999.9999" class="intervention-superficie-field"></td>
+                                <td><input type="number" min="1900" max="2050" class="intervention-anno-field"></td>
+                                <td><input type="number" readonly class="calculated-field intervention-eta-field"></td>
+                                <td><input type="number" step="0.01" max="9999.99" readonly class="calculated-field intervention-provv-field"></td>
+                                <td><input type="number" step="0.01" max="9999.99" readonly class="calculated-field intervention-ripresa-field"></td>
                                 <td></td>
                             </tr>
                         </tbody>
@@ -797,7 +818,7 @@
                                         <td><input type="text"></td>
                                         <td><input type="text"></td>
                                         <td><input type="text"></td>
-                                        <td><input type="number" step="0.01"></td>
+                                        <td><input type="number" step="0.01" class="cadastral-superficie-field"></td>
                                         <td></td>
                                     </tr>
                                 </tbody>
@@ -1351,13 +1372,40 @@
                         <option value="Altro: dettagliato in descrizione">Altro: dettagliato in descrizione</option>
                     </select>
                 </td>
-                <td><input type="number" step="0.0001" max="999.9999"></td>
-                <td><input type="number" min="1900" max="2050"></td>
-                <td><input type="number"></td>
-                <td><input type="number" step="0.01" max="9999.99"></td>
-                <td><input type="number" step="0.01" max="9999.99"></td>
+                <td><input type="number" step="0.0001" max="999.9999" class="intervention-superficie-field"></td>
+                <td><input type="number" min="1900" max="2050" class="intervention-anno-field"></td>
+                <td><input type="number" readonly class="calculated-field intervention-eta-field"></td>
+                <td><input type="number" step="0.01" max="9999.99" readonly class="calculated-field intervention-provv-field"></td>
+                <td><input type="number" step="0.01" max="9999.99" readonly class="calculated-field intervention-ripresa-field"></td>
                 <td><button type="button" class="delete-row-btn" onclick="deleteInterventionRow(this)">🗑️</button></td>
             `;
+            
+            // Add calculation listeners to the new row
+            addInterventionCalculationListeners(newRow);
+            
+            // Add formatting listeners to the new intervention superficie field (EXACTLY like superficie-sottoparticella)
+            const newInterventionSuperficieField = newRow.querySelector('.intervention-superficie-field');
+            if (newInterventionSuperficieField) {
+                // Add input listener for real-time validation (like superficie-sottoparticella)
+                newInterventionSuperficieField.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    // Allow only numbers, dots, and commas
+                    const sanitized = value.replace(/[^0-9.,]/g, '');
+                    if (sanitized !== value) {
+                        e.target.value = sanitized;
+                    }
+                });
+                
+                // Add blur listener for final formatting (like superficie-sottoparticella)
+                newInterventionSuperficieField.addEventListener('blur', function() {
+                    validateAndFormatDecimals(this);
+                });
+            }
+            
+            // Calculate età, provv and ripresa for the new row
+            calculateInterventionEta();
+            calculateInterventionProvv();
+            calculateInterventionRipresa();
         });
 
         // Funzione per eliminare righe specie
@@ -1420,15 +1468,40 @@
                 <td><input type="text"></td>
                 <td><input type="text"></td>
                 <td><input type="text"></td>
-                <td><input type="number" step="0.01"></td>
+                <td><input type="number" step="0.01" class="cadastral-superficie-field"></td>
                 ${showDeleteBtn ? '<td><button type="button" class="delete-row-btn" onclick="deleteCadastralRow(this)">🗑️</button></td>' : '<td></td>'}
             `;
+            
+            // Add validation and formatting listeners to the new superficie field (EXACTLY like superficie-sottoparticella)
+            const newSuperficieField = newRow.querySelector('.cadastral-superficie-field');
+            if (newSuperficieField) {
+                // Add validation listener for cadastral sum checking
+                newSuperficieField.addEventListener('input', validateCadastralSuperficie);
+                
+                // Add input listener for real-time validation (like superficie-sottoparticella)
+                newSuperficieField.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    // Allow only numbers, dots, and commas
+                    const sanitized = value.replace(/[^0-9.,]/g, '');
+                    if (sanitized !== value) {
+                        e.target.value = sanitized;
+                    }
+                });
+                
+                // Add blur listener for final formatting (like superficie-sottoparticella)
+                newSuperficieField.addEventListener('blur', function() {
+                    validateAndFormatDecimals(this);
+                });
+            }
         });
 
         // Funzione per eliminare righe catastali
         function deleteCadastralRow(button) {
             const row = button.closest('tr');
             row.remove();
+            
+            // Validate after deletion
+            validateCadastralSuperficie();
         }
 
         // Salvataggio dati nel localStorage
@@ -1861,7 +1934,7 @@
             // Update the Volume totale field
             const volumeTotaleField = document.getElementById('volume-totale');
             if (volumeTotaleField) {
-                volumeTotaleField.value = totalVolume > 0 ? totalVolume.toFixed(4) : '';
+                volumeTotaleField.value = totalVolume > 0 ? totalVolume.toFixed(2) : '';
             }
         }
 
@@ -1897,13 +1970,13 @@
                 
                 // Set volume per hectare
                 if (volumePerHectareField) {
-                    volumePerHectareField.value = volumePerHectare.toFixed(4);
+                    volumePerHectareField.value = volumePerHectare.toFixed(2);
                 }
                 
                 // Total volume formula: volumePerHectare × superficieSotto
                 if (superficieSotto > 0) {
                     const totalVolume = volumePerHectare * superficieSotto;
-                    volumeField.value = totalVolume.toFixed(4);
+                    volumeField.value = totalVolume.toFixed(2);
                 } else {
                     volumeField.value = '';
                 }
@@ -1916,6 +1989,262 @@
             
             // Update total volume after individual volume calculation
             calculateTotalVolume();
+            
+            // Update all indices after changes
+            calculateImd();
+            calculateImh();
+            calculateImv();
+            
+            // Update intervention calculations after volume changes
+            calculateInterventionEta();
+            calculateInterventionProvv();
+            calculateInterventionRipresa();
+        }
+
+        // Imd calculation function
+        function calculateImd() {
+            const speciesTable = document.querySelector('.species-table tbody');
+            const etaField = document.getElementById('eta-soprassuolo');
+            const imdField = document.getElementById('imd');
+            
+            if (!speciesTable || !etaField || !imdField) return;
+            
+            const eta = parseFloat(etaField.value) || 0;
+            
+            if (eta <= 0) {
+                imdField.value = '';
+                return;
+            }
+            
+            // Find the maximum diameter from all species rows
+            const diameterFields = speciesTable.querySelectorAll('.diameter-field');
+            let maxDiameter = 0;
+            
+            diameterFields.forEach(field => {
+                const diameter = parseFloat(field.value) || 0;
+                if (diameter > maxDiameter) {
+                    maxDiameter = diameter;
+                }
+            });
+            
+            if (maxDiameter > 0) {
+                // Imd = max diameter (in cm) / età (in years)
+                const imd = maxDiameter / eta;
+                imdField.value = imd.toFixed(2);
+            } else {
+                imdField.value = '';
+            }
+        }
+
+        // Imh calculation function
+        function calculateImh() {
+            const speciesTable = document.querySelector('.species-table tbody');
+            const etaField = document.getElementById('eta-soprassuolo');
+            const imhField = document.getElementById('imh');
+            
+            if (!speciesTable || !etaField || !imhField) return;
+            
+            const eta = parseFloat(etaField.value) || 0;
+            
+            if (eta <= 0) {
+                imhField.value = '';
+                return;
+            }
+            
+            // Find the maximum height from all species rows
+            const heightFields = speciesTable.querySelectorAll('.height-field');
+            let maxHeight = 0;
+            
+            heightFields.forEach(field => {
+                const height = parseFloat(field.value) || 0;
+                if (height > maxHeight) {
+                    maxHeight = height;
+                }
+            });
+            
+            if (maxHeight > 0) {
+                // Imh = max height (in m) / età (in years)
+                const imh = maxHeight / eta;
+                imhField.value = imh.toFixed(2);
+            } else {
+                imhField.value = '';
+            }
+        }
+
+        // Imv calculation function
+        function calculateImv() {
+            const etaField = document.getElementById('eta-soprassuolo');
+            const imvField = document.getElementById('imv');
+            const volumeTotaleField = document.getElementById('volume-totale');
+            
+            if (!etaField || !imvField || !volumeTotaleField) return;
+            
+            const eta = parseFloat(etaField.value) || 0;
+            const totalVolume = parseFloat(volumeTotaleField.value) || 0;
+            
+            if (eta <= 0) {
+                imvField.value = '';
+                return;
+            }
+            
+            if (totalVolume > 0) {
+                // Imv = total volume (mc) / età (in years)
+                const imv = totalVolume / eta;
+                imvField.value = imv.toFixed(2);
+            } else {
+                imvField.value = '';
+            }
+        }
+
+        // Intervention età calculation function
+        function calculateInterventionEta() {
+            const annoRilievoField = document.getElementById('anno-rilievo');
+            const etaSoprassuoloField = document.getElementById('eta-soprassuolo');
+            const interventionTable = document.querySelector('.intervention-table tbody');
+            
+            if (!annoRilievoField || !etaSoprassuoloField || !interventionTable) return;
+            
+            const annoRilievo = parseFloat(annoRilievoField.value) || 0;
+            const etaSoprassuolo = parseFloat(etaSoprassuoloField.value) || 0;
+            
+            // Calculate for all intervention rows
+            const interventionRows = interventionTable.querySelectorAll('tr');
+            interventionRows.forEach(row => {
+                const annoInterventoField = row.querySelector('.intervention-anno-field');
+                const etaInterventoField = row.querySelector('.intervention-eta-field');
+                
+                if (annoInterventoField && etaInterventoField) {
+                    const annoIntervento = parseFloat(annoInterventoField.value) || 0;
+                    
+                    if (annoIntervento > 0 && annoRilievo > 0 && etaSoprassuolo >= 0) {
+                        // Formula: (anno intervento - anno rilievo) + età soprassuolo
+                        const etaIntervento = (annoIntervento - annoRilievo) + etaSoprassuolo;
+                        etaInterventoField.value = etaIntervento >= 0 ? etaIntervento : '';
+                    } else {
+                        etaInterventoField.value = '';
+                    }
+                }
+            });
+        }
+
+        // Intervention Provv calculation function
+        function calculateInterventionProvv() {
+            const superficieSottoField = document.getElementById('superficie-sottoparticella');
+            const etaSoprassuoloField = document.getElementById('eta-soprassuolo');
+            const imvField = document.getElementById('imv');
+            const volumeTotaleField = document.getElementById('volume-totale');
+            const intensitaInterventoField = document.getElementById('intensita-intervento');
+            const interventionTable = document.querySelector('.intervention-table tbody');
+            
+            if (!superficieSottoField || !etaSoprassuoloField || !imvField || !volumeTotaleField || !intensitaInterventoField || !interventionTable) return;
+            
+            const superficieSotto = parseFloat(superficieSottoField.value) || 0;
+            const etaSoprassuolo = parseFloat(etaSoprassuoloField.value) || 0;
+            const imv = parseFloat(imvField.value) || 0;
+            const volumeTotale = parseFloat(volumeTotaleField.value) || 0;
+            const intensitaIntervento = parseFloat(intensitaInterventoField.value) || 0;
+            
+            // Calculate for all intervention rows
+            const interventionRows = interventionTable.querySelectorAll('tr');
+            interventionRows.forEach(row => {
+                const etaInterventoField = row.querySelector('.intervention-eta-field');
+                const provvField = row.querySelector('.intervention-provv-field');
+                
+                if (etaInterventoField && provvField) {
+                    const etaIntervento = parseFloat(etaInterventoField.value) || 0;
+                    
+                    if (superficieSotto > 0 && imv > 0 && etaIntervento >= 0 && etaSoprassuolo >= 0) {
+                        // Formula: ((Superficie sottoparticella * (Imv * (età intervento - età soprassuolo))) + Volume totale) * (intensità intervento / 100)
+                        const etaDifference = etaIntervento - etaSoprassuolo;
+                        const totalBeforeReduction = (superficieSotto * (imv * etaDifference)) + volumeTotale;
+                        
+                        // Apply intensità intervento as percentage to keep
+                        const keepFactor = intensitaIntervento > 0 ? (intensitaIntervento / 100) : 1;
+                        const provv = totalBeforeReduction * keepFactor;
+                        
+                        provvField.value = provv >= 0 ? provv.toFixed(2) : '';
+                    } else {
+                        provvField.value = '';
+                    }
+                }
+            });
+        }
+
+        // Intervention Ripresa calculation function
+        function calculateInterventionRipresa() {
+            const imvField = document.getElementById('imv');
+            const interventionTable = document.querySelector('.intervention-table tbody');
+            
+            if (!imvField || !interventionTable) return;
+            
+            const imv = parseFloat(imvField.value) || 0;
+            
+            // Calculate for all intervention rows
+            const interventionRows = interventionTable.querySelectorAll('tr');
+            interventionRows.forEach(row => {
+                const superficieInterventoField = row.querySelector('.intervention-superficie-field');
+                const ripreseField = row.querySelector('.intervention-ripresa-field');
+                
+                if (superficieInterventoField && ripreseField) {
+                    const superficieIntervento = parseFloat(superficieInterventoField.value) || 0;
+                    
+                    if (superficieIntervento > 0 && imv > 0) {
+                        // Formula: superficie intervento * Imv
+                        const ripresa = superficieIntervento * imv;
+                        ripreseField.value = ripresa.toFixed(2);
+                    } else {
+                        ripreseField.value = '';
+                    }
+                }
+            });
+        }
+
+        // Cadastral superficie validation function
+        function validateCadastralSuperficie() {
+            const superficieSottoField = document.getElementById('superficie-sottoparticella');
+            const cadastralSuperficieFields = document.querySelectorAll('.cadastral-superficie-field');
+            const cadastralContainer = document.querySelector('.cadastral-container');
+            
+            if (!superficieSottoField || !cadastralContainer) return;
+            
+            const maxSuperficie = parseFloat(superficieSottoField.value) || 0;
+            let totalCadastralSuperficie = 0;
+            
+            // Calculate total cadastral superficie
+            cadastralSuperficieFields.forEach(field => {
+                const value = parseFloat(field.value) || 0;
+                totalCadastralSuperficie += value;
+            });
+            
+            // Check if total exceeds limit
+            const isOverLimit = totalCadastralSuperficie > maxSuperficie;
+            
+            // Add or remove error styling
+            if (isOverLimit) {
+                cadastralContainer.classList.add('superficie-error');
+                
+                // Show error message
+                let errorMsg = document.getElementById('cadastral-error-msg');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('div');
+                    errorMsg.id = 'cadastral-error-msg';
+                    errorMsg.className = 'error-message';
+                    errorMsg.innerHTML = `⚠️ Errore: La somma delle superfici catastali (${totalCadastralSuperficie.toFixed(4)} ha) supera la superficie sottoparticella (${maxSuperficie.toFixed(4)} ha)`;
+                    cadastralContainer.insertBefore(errorMsg, cadastralContainer.firstChild);
+                } else {
+                    errorMsg.innerHTML = `⚠️ Errore: La somma delle superfici catastali (${totalCadastralSuperficie.toFixed(4)} ha) supera la superficie sottoparticella (${maxSuperficie.toFixed(4)} ha)`;
+                }
+            } else {
+                cadastralContainer.classList.remove('superficie-error');
+                
+                // Remove error message
+                const errorMsg = document.getElementById('cadastral-error-msg');
+                if (errorMsg) {
+                    errorMsg.remove();
+                }
+            }
+            
+            return !isOverLimit;
         }
 
         // Add event listeners for existing species row
@@ -1932,6 +2261,9 @@
                 if (diameterField && heightField && volumeField && percentageField) {
                     function updateVolume() {
                         calculateVolume(diameterField, heightField, volumeField);
+                        calculateImd();
+                        calculateImh();
+                        calculateImv();
                     }
                     
                     function validateAndUpdateVolume() {
@@ -1967,6 +2299,73 @@
             const existingRows = speciesTable.querySelectorAll('tr');
             existingRows.forEach(addCalculationListeners);
             
+            // Calculate all indices on page load
+            calculateImd();
+            calculateImh();
+            calculateImv();
+            calculateInterventionEta();
+            calculateInterventionProvv();
+            calculateInterventionRipresa();
+            
+            // Function to format existing volume fields to 2 decimals
+            function formatExistingVolumeFields() {
+                // Format all volume fields in species table
+                const volumeFields = document.querySelectorAll('.volume-field');
+                volumeFields.forEach(field => {
+                    if (field.value && field.value !== '') {
+                        const value = parseFloat(field.value);
+                        if (!isNaN(value)) {
+                            field.value = value.toFixed(2);
+                        }
+                    }
+                });
+                
+                // Format all volume per hectare fields
+                const volumePerHectareFields = document.querySelectorAll('.volume-per-hectare-field');
+                volumePerHectareFields.forEach(field => {
+                    if (field.value && field.value !== '') {
+                        const value = parseFloat(field.value);
+                        if (!isNaN(value)) {
+                            field.value = value.toFixed(2);
+                        }
+                    }
+                });
+                
+                // Format volume totale field
+                const volumeTotaleField = document.getElementById('volume-totale');
+                if (volumeTotaleField && volumeTotaleField.value && volumeTotaleField.value !== '') {
+                    const value = parseFloat(volumeTotaleField.value);
+                    if (!isNaN(value)) {
+                        volumeTotaleField.value = value.toFixed(2);
+                    }
+                }
+            }
+            
+            // Format existing volume fields to 2 decimals
+            formatExistingVolumeFields();
+            
+            // Function to format superficie fields to 4 decimals using validateAndFormatDecimals
+            function formatSuperficieFields() {
+                // Format intervention superficie fields
+                const interventionSuperficieFields = document.querySelectorAll('.intervention-superficie-field');
+                interventionSuperficieFields.forEach(field => {
+                    if (field.value && field.value !== '') {
+                        validateAndFormatDecimals(field);
+                    }
+                });
+                
+                // Format cadastral superficie fields
+                const cadastralSuperficieFields = document.querySelectorAll('.cadastral-superficie-field');
+                cadastralSuperficieFields.forEach(field => {
+                    if (field.value && field.value !== '') {
+                        validateAndFormatDecimals(field);
+                    }
+                });
+            }
+            
+            // Format existing superficie fields to 4 decimals
+            formatSuperficieFields();
+            
             // Add listeners to global fields that affect all species calculations
             const pianteEttaroField = document.getElementById('piante-ettaro');
             const superficieSottoField = document.getElementById('superficie-sottoparticella');
@@ -1976,8 +2375,131 @@
             }
             
             if (superficieSottoField) {
-                superficieSottoField.addEventListener('input', updateAllSpeciesVolumes);
+                superficieSottoField.addEventListener('input', function() {
+                    updateAllSpeciesVolumes();
+                    calculateInterventionProvv();
+                });
             }
+            
+            // Add listener to età field for all index calculations
+            const etaField = document.getElementById('eta-soprassuolo');
+            if (etaField) {
+                etaField.addEventListener('input', function() {
+                    calculateImd();
+                    calculateImh();
+                    calculateImv();
+                    calculateInterventionEta();
+                    calculateInterventionProvv();
+                    calculateInterventionRipresa();
+                });
+            }
+            
+            // Add listener to anno rilievo field for intervention età calculation
+            const annoRilievoField = document.getElementById('anno-rilievo');
+            if (annoRilievoField) {
+                annoRilievoField.addEventListener('input', function() {
+                    calculateInterventionEta();
+                    calculateInterventionProvv();
+                });
+            }
+            
+            // Function to add intervention calculation listeners to a row
+            function addInterventionCalculationListeners(row) {
+                const annoInterventoField = row.querySelector('.intervention-anno-field');
+                const superficieInterventoField = row.querySelector('.intervention-superficie-field');
+                
+                if (annoInterventoField) {
+                    annoInterventoField.addEventListener('input', function() {
+                        calculateInterventionEta();
+                        calculateInterventionProvv();
+                        calculateInterventionRipresa();
+                    });
+                }
+                
+                if (superficieInterventoField) {
+                    superficieInterventoField.addEventListener('input', function() {
+                        calculateInterventionRipresa();
+                    });
+                }
+            }
+            
+            // Add listeners to existing intervention rows
+            const interventionTable = document.querySelector('.intervention-table tbody');
+            if (interventionTable) {
+                const existingInterventionRows = interventionTable.querySelectorAll('tr');
+                existingInterventionRows.forEach(addInterventionCalculationListeners);
+            }
+            
+            // Add listener to intensità intervento field for Provv calculation
+            const intensitaInterventoField = document.getElementById('intensita-intervento');
+            if (intensitaInterventoField) {
+                intensitaInterventoField.addEventListener('input', calculateInterventionProvv);
+            }
+            
+            // Add listener to superficie sottoparticella for cadastral validation
+            if (superficieSottoField) {
+                superficieSottoField.addEventListener('input', validateCadastralSuperficie);
+            }
+            
+            // Add listeners to existing cadastral superficie fields
+            function addCadastralValidationListeners() {
+                const cadastralSuperficieFields = document.querySelectorAll('.cadastral-superficie-field');
+                cadastralSuperficieFields.forEach(field => {
+                    field.addEventListener('input', validateCadastralSuperficie);
+                });
+            }
+            
+            // Add validation listeners to existing cadastral fields
+            addCadastralValidationListeners();
+            
+            
+            // Add superficie formatting listeners EXACTLY like superficie-sottoparticella
+            console.log('Adding superficie formatting listeners...');
+            
+            // Format intervention superficie fields with BOTH input and blur (copying superficie-sottoparticella pattern)
+            const allInterventionSuperficieFields = document.querySelectorAll('.intervention-superficie-field');
+            console.log('Found intervention superficie fields:', allInterventionSuperficieFields.length);
+            allInterventionSuperficieFields.forEach(field => {
+                // Add input listener for real-time validation (like superficie-sottoparticella)
+                field.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    // Allow only numbers, dots, and commas
+                    const sanitized = value.replace(/[^0-9.,]/g, '');
+                    if (sanitized !== value) {
+                        e.target.value = sanitized;
+                    }
+                });
+                
+                // Add blur listener for final formatting (like superficie-sottoparticella)
+                field.addEventListener('blur', function() {
+                    console.log('Formatting intervention superficie field...');
+                    validateAndFormatDecimals(this);
+                });
+            });
+            
+            // Format cadastral superficie fields with BOTH input and blur (copying superficie-sottoparticella pattern)
+            const allCadastralSuperficieFields = document.querySelectorAll('.cadastral-superficie-field');
+            console.log('Found cadastral superficie fields:', allCadastralSuperficieFields.length);
+            allCadastralSuperficieFields.forEach(field => {
+                // Add input listener for real-time validation (like superficie-sottoparticella)
+                field.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    // Allow only numbers, dots, and commas
+                    const sanitized = value.replace(/[^0-9.,]/g, '');
+                    if (sanitized !== value) {
+                        e.target.value = sanitized;
+                    }
+                });
+                
+                // Add blur listener for final formatting (like superficie-sottoparticella)
+                field.addEventListener('blur', function() {
+                    console.log('Formatting cadastral superficie field...');
+                    validateAndFormatDecimals(this);
+                });
+            });
+            
+            // Validate cadastral superficie on page load
+            validateCadastralSuperficie();
             
             // Override the add-species button to include calculation listeners
             const originalAddSpeciesHandler = document.getElementById('add-species').onclick;
@@ -1987,6 +2509,9 @@
                     const newRows = speciesTable.querySelectorAll('tr');
                     const newRow = newRows[newRows.length - 1];
                     addCalculationListeners(newRow);
+                    calculateImd();
+                    calculateImh();
+                    calculateImv();
                 }, 10);
             });
         });
