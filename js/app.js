@@ -2,7 +2,7 @@ class PWAApp {
     constructor() {
         this.deferredPrompt = null;
         this.isOnline = navigator.onLine;
-        this.init();
+        // Don't init automatically - let the main app control initialization
     }
 
     init() {
@@ -10,8 +10,8 @@ class PWAApp {
         this.setupInstallPrompt();
         this.setupOfflineHandling();
         this.setupNotifications();
-        this.setupAutomaticCalculations();
         this.loadAppData();
+        // Remove setupAutomaticCalculations - handled by CalculationModule
     }
 
     async registerServiceWorker() {
@@ -85,36 +85,7 @@ class PWAApp {
         }
     }
 
-    setupAutomaticCalculations() {
-        // Delay execution to ensure DOM elements are available
-        setTimeout(() => {
-            const pfInput = document.getElementById('particella');
-            const spfInput = document.getElementById('sottoparticella');
-            const chiaveDbInput = document.getElementById('chiave-db');
-
-            console.log('PF Input:', pfInput);
-            console.log('SPF Input:', spfInput);
-            console.log('Chiave DB Input:', chiaveDbInput);
-
-            const calculateChiaveDb = () => {
-                const pfValue = pfInput.value.trim();
-                const spfValue = spfInput.value.trim();
-                const concatenated = pfValue + spfValue;
-                console.log('Calculating:', pfValue, '+', spfValue, '=', concatenated);
-                chiaveDbInput.value = concatenated;
-            };
-
-            if (pfInput && spfInput && chiaveDbInput) {
-                pfInput.addEventListener('input', calculateChiaveDb);
-                spfInput.addEventListener('input', calculateChiaveDb);
-                
-                calculateChiaveDb();
-                console.log('Event listeners added successfully');
-            } else {
-                console.error('Could not find required input elements');
-            }
-        }, 100);
-    }
+    // Removed setupAutomaticCalculations - now handled by CalculationModule
 
     showUpdateAvailable() {
         const updateBanner = document.createElement('div');
@@ -178,15 +149,20 @@ class PWAApp {
 
     updateUI(data) {
         const contentSection = document.getElementById('content');
-        const statsHtml = `
-            <div class="app-stats">
-                <h3>App Statistics</h3>
-                <p><strong>Visit Count:</strong> ${data.visitCount}</p>
-                <p><strong>Last Visit:</strong> ${new Date(data.lastVisit).toLocaleString()}</p>
-            </div>
-        `;
-        
-        contentSection.innerHTML += statsHtml;
+        if (contentSection) {
+            const statsHtml = `
+                <div class="app-stats" style="display: none;">
+                    <h3>App Statistics</h3>
+                    <p><strong>Visit Count:</strong> ${data.visitCount}</p>
+                    <p><strong>Last Visit:</strong> ${new Date(data.lastVisit).toLocaleString()}</p>
+                </div>
+            `;
+
+            // Only add if stats don't already exist
+            if (!contentSection.querySelector('.app-stats')) {
+                contentSection.innerHTML += statsHtml;
+            }
+        }
     }
 
     showLoading(show) {
@@ -206,23 +182,9 @@ class PWAApp {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new PWAApp();
-    
-    if (document.readyState === 'complete') {
-        app.syncData();
-    } else {
-        window.addEventListener('load', () => {
-            app.syncData();
-        });
-    }
-});
-
-window.addEventListener('beforeunload', (e) => {
-    const app = new PWAApp();
-    const data = app.getLocalData();
-    if (data) {
-        data.lastExit = new Date().toISOString();
-        app.saveLocalData(data);
-    }
-});
+// Export PWAApp for use by main application
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = PWAApp;
+} else {
+    window.PWAApp = PWAApp;
+}

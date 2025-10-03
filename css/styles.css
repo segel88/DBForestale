@@ -1944,4 +1944,242 @@ table td input:focus {
     border: 1px solid #9c27b0 !important;
     font-weight: bold;
 }
+
+/* ==================================================
+   REGOLE DI STAMPA PER PDF A4
+   ================================================== */
+
+@page {
+    size: A4;
+    margin: 10mm;
+    marks: none;
+}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+        background: white !important;
+        color: black !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Hide elements that shouldn't be printed */
+    .home-container,
+    .project-page,
+    .add-row-btn,
+    .delete-row-btn,
+    .action-btn,
+    .back-btn,
+    .install-banner,
+    .connection-status,
+    #install-prompt,
+    #connection-status,
+    button:not(.print-btn),
+    .hidden {
+        display: none !important;
+    }
+
+    /* Show only the main form for printing */
+    #main-form {
+        display: block !important;
+        page-break-inside: avoid;
+    }
+
+    /* Container adjustments for print */
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        background: white !important;
+    }
+
+    /* Header styling for print */
+    .form-header {
+        background-color: #8FBC8F !important;
+        color: white !important;
+        padding: 8px 12px !important;
+        margin: 0 0 10px 0 !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+        page-break-after: avoid;
+    }
+
+    /* Table styling for print */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        page-break-inside: avoid;
+        font-size: 9px !important;
+    }
+
+    table th,
+    table td {
+        border: 1px solid #333 !important;
+        padding: 2px 4px !important;
+        text-align: left !important;
+        vertical-align: top !important;
+        background: white !important;
+        color: black !important;
+    }
+
+    table th {
+        background-color: #f0f0f0 !important;
+        font-weight: bold !important;
+        color: black !important;
+    }
+
+    /* Input field styling for print */
+    input,
+    select,
+    textarea {
+        border: 1px solid #333 !important;
+        background: white !important;
+        color: black !important;
+        font-size: 9px !important;
+        padding: 1px 2px !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+    }
+
+    /* Calculated fields styling for print */
+    .calculated-field {
+        background-color: #f5f5f5 !important;
+        border: 1px solid #666 !important;
+        color: black !important;
+        font-weight: bold !important;
+    }
+
+    /* Section spacing */
+    .form-section {
+        margin-bottom: 8px !important;
+        page-break-inside: avoid;
+    }
+
+    .form-section h3 {
+        background-color: #e0e0e0 !important;
+        color: black !important;
+        padding: 4px 8px !important;
+        margin: 0 0 4px 0 !important;
+        font-size: 11px !important;
+        font-weight: bold !important;
+        border: 1px solid #333 !important;
+    }
+
+    /* Grid layouts for print */
+    .form-grid-2,
+    .form-grid-3,
+    .form-grid-4 {
+        display: grid !important;
+        gap: 4px !important;
+        page-break-inside: avoid;
+    }
+
+    .form-grid-2 { grid-template-columns: 1fr 1fr !important; }
+    .form-grid-3 { grid-template-columns: 1fr 1fr 1fr !important; }
+    .form-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr !important; }
+
+    /* Field groups */
+    .field-group {
+        margin-bottom: 3px !important;
+        break-inside: avoid;
+    }
+
+    .field-group label {
+        font-size: 8px !important;
+        font-weight: bold !important;
+        color: black !important;
+        margin-bottom: 1px !important;
+        display: block !important;
+    }
+
+    /* Print header and footer */
+    .print-header-content,
+    .print-footer-content {
+        background: white !important;
+        color: black !important;
+        padding: 4px 0 !important;
+        font-size: 8px !important;
+        border-top: 1px solid #333 !important;
+        border-bottom: 1px solid #333 !important;
+        page-break-inside: avoid;
+    }
+
+    .print-header-content {
+        border-bottom: 2px solid #333 !important;
+        margin-bottom: 8px !important;
+    }
+
+    .print-footer-content {
+        border-top: 2px solid #333 !important;
+        margin-top: 8px !important;
+    }
+
+    /* Infrastructure, species, intervention tables */
+    .species-table,
+    .intervention-table,
+    .infrastructure-table {
+        font-size: 8px !important;
+        margin: 4px 0 !important;
+    }
+
+    .species-table th,
+    .intervention-table th {
+        font-size: 7px !important;
+        padding: 1px 2px !important;
+    }
+
+    /* Cadastral section */
+    .cadastral-container {
+        page-break-inside: avoid;
+    }
+
+    .cadastral-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+    }
+
+    /* Page breaks */
+    .page-break-before {
+        page-break-before: always !important;
+    }
+
+    .page-break-after {
+        page-break-after: always !important;
+    }
+
+    .no-page-break {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Hide empty table rows */
+    tr:empty {
+        display: none !important;
+    }
+
+    /* Ensure proper contrast for printing */
+    * {
+        color: black !important;
+        text-shadow: none !important;
+    }
+
+    /* Background colors for sections (light for contrast) */
+    .form-section {
+        border: 1px solid #333 !important;
+        padding: 4px !important;
+    }
+}
 }
